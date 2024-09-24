@@ -1,10 +1,12 @@
 package com.github.lsjunior.icrypto.core.certificate.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -55,6 +57,7 @@ import com.github.lsjunior.icrypto.api.model.DistinguishedName;
 import com.github.lsjunior.icrypto.api.model.LocationName;
 import com.github.lsjunior.icrypto.api.type.CertificateType;
 import com.github.lsjunior.icrypto.api.type.KeyUsageType;
+import com.github.lsjunior.icrypto.core.certificate.impl.PemCertificateWriter;
 import com.github.lsjunior.icrypto.core.util.Asn1Objects;
 import com.github.lsjunior.icrypto.core.util.BcProvider;
 import com.google.common.base.Strings;
@@ -126,6 +129,25 @@ public abstract class Certificates {
   public static byte[] toByteArray(final Certificate certificate) throws CertificateEncodingException {
     if (certificate != null) {
       return ((X509Certificate) certificate).getEncoded();
+    }
+    return null;
+  }
+
+  public static byte[] toPemByteArray(final Certificate certificate) {
+    if (certificate != null) {
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      PemCertificateWriter.getInstance().write(Collections.singletonList(certificate), outputStream);
+      byte[] bytes = outputStream.toByteArray();
+      return bytes;
+    }
+    return null;
+  }
+
+  public static String toPemString(final Certificate certificate) {
+    if (certificate != null) {
+      byte[] bytes = Certificates.toPemByteArray(certificate);
+      String str = new String(bytes, StandardCharsets.UTF_8);
+      return str;
     }
     return null;
   }

@@ -3,6 +3,7 @@ package com.github.lsjunior.icrypto.core.certificate.impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bouncycastle.asn1.ASN1Boolean;
@@ -72,8 +73,7 @@ public abstract class AbstractCertificateManager {
         list.add(keyPurposeId);
       }
       if (list.size() > 0) {
-        org.bouncycastle.asn1.x509.ExtendedKeyUsage extendedKeyUsage =
-            new org.bouncycastle.asn1.x509.ExtendedKeyUsage(Iterables.toArray(list, KeyPurposeId.class));
+        org.bouncycastle.asn1.x509.ExtendedKeyUsage extendedKeyUsage = new org.bouncycastle.asn1.x509.ExtendedKeyUsage(Iterables.toArray(list, KeyPurposeId.class));
         Extension extension = new Extension(Extension.extendedKeyUsage, request.isExtendedKeyUsageCritical(), extendedKeyUsage.getEncoded(ASN1Encoding.DER));
         return extension;
       }
@@ -84,12 +84,28 @@ public abstract class AbstractCertificateManager {
   protected Extension getCertificatePolicies(final BouncyCastleCertificateRequest request) throws IOException {
     if (request.getCertificatePolicies() != null) {
       List<PolicyInformation> list = new ArrayList<>();
-      for (Entry<String, String> entry : request.getCertificatePolicies().entrySet()) {
+      for (Entry<String, Map<String, String>> entry : request.getCertificatePolicies().entrySet()) {
         String oid = entry.getKey();
-        String value = entry.getValue();
+        Map<String, String> value = entry.getValue();
         ASN1ObjectIdentifier policyIdentifier = new ASN1ObjectIdentifier(oid);
-        PolicyQualifierInfo policyQualifierInfo = new PolicyQualifierInfo(policyIdentifier, new DERIA5String(value));
-        DERSequence policyQualifiers = new DERSequence(new ASN1Encodable[] {policyQualifierInfo});
+        DERSequence policyQualifiers = null;
+
+        if (value != null) {
+          List<PolicyQualifierInfo> policyQualifierInfoList = new ArrayList<>();
+          for (Entry<String, String> subEntry : value.entrySet()) {
+            String subOid = subEntry.getKey();
+            String subValue = subEntry.getValue();
+            PolicyQualifierInfo policyQualifierInfo = null;
+            if (!Strings.isNullOrEmpty(subValue)) {
+              policyQualifierInfo = new PolicyQualifierInfo(new ASN1ObjectIdentifier(subOid), new DERIA5String(subValue));
+            } else {
+              policyQualifierInfo = new PolicyQualifierInfo(new ASN1ObjectIdentifier(subOid), null);
+            }
+            policyQualifierInfoList.add(policyQualifierInfo);
+          }
+          policyQualifiers = new DERSequence(Iterables.toArray(policyQualifierInfoList, PolicyQualifierInfo.class));
+        }
+
         PolicyInformation policyInformation = new PolicyInformation(policyIdentifier, policyQualifiers);
         list.add(policyInformation);
       }
@@ -183,8 +199,7 @@ public abstract class AbstractCertificateManager {
 
   protected Extension getNetscapeCaPolicyUrl(final BouncyCastleCertificateRequest request) throws IOException {
     if (!Strings.isNullOrEmpty(request.getCrlDistPoint())) {
-      Extension extension =
-          new Extension(MiscObjectIdentifiers.netscapeCApolicyURL, false, new DERIA5String(request.getCrlDistPoint()).getEncoded(ASN1Encoding.DER));
+      Extension extension = new Extension(MiscObjectIdentifiers.netscapeCApolicyURL, false, new DERIA5String(request.getCrlDistPoint()).getEncoded(ASN1Encoding.DER));
       return extension;
     }
     return null;
@@ -202,8 +217,7 @@ public abstract class AbstractCertificateManager {
   protected Extension getOcspUrl(final BouncyCastleCertificateRequest request) throws IOException {
     if (!Strings.isNullOrEmpty(request.getOcspUrl())) {
       GeneralName ocspLocation = new GeneralName(GeneralName.uniformResourceIdentifier, new DERIA5String(request.getOcspUrl()));
-      Extension extension = new Extension(Extension.authorityInfoAccess, false,
-          new AuthorityInformationAccess(X509ObjectIdentifiers.ocspAccessMethod, ocspLocation).getEncoded(ASN1Encoding.DER));
+      Extension extension = new Extension(Extension.authorityInfoAccess, false, new AuthorityInformationAccess(X509ObjectIdentifiers.ocspAccessMethod, ocspLocation).getEncoded(ASN1Encoding.DER));
       return extension;
     }
     return null;
@@ -211,8 +225,7 @@ public abstract class AbstractCertificateManager {
 
   protected Extension getPolicyUrl(final BouncyCastleCertificateRequest request) throws IOException {
     if (!Strings.isNullOrEmpty(request.getPolicyUrl())) {
-      Extension extension =
-          new Extension(MiscObjectIdentifiers.netscapeCApolicyURL, false, new DERIA5String(request.getPolicyUrl()).getEncoded(ASN1Encoding.DER));
+      Extension extension = new Extension(MiscObjectIdentifiers.netscapeCApolicyURL, false, new DERIA5String(request.getPolicyUrl()).getEncoded(ASN1Encoding.DER));
       return extension;
     }
     return null;
@@ -220,8 +233,7 @@ public abstract class AbstractCertificateManager {
 
   protected Extension getComment(final BouncyCastleCertificateRequest request) throws IOException {
     if (!Strings.isNullOrEmpty(request.getComment())) {
-      Extension extension =
-          new Extension(MiscObjectIdentifiers.netscapeCertComment, false, new DERIA5String(request.getComment()).getEncoded(ASN1Encoding.DER));
+      Extension extension = new Extension(MiscObjectIdentifiers.netscapeCertComment, false, new DERIA5String(request.getComment()).getEncoded(ASN1Encoding.DER));
       return extension;
     }
     return null;
@@ -240,7 +252,8 @@ public abstract class AbstractCertificateManager {
         basicConstraints = BasicConstraints.getInstance(sequence);
       }
     } else {
-      basicConstraints = new BasicConstraints(false);
+      // basicConstraints = new BasicConstraints(false);
+      return null;
     }
     byte[] extValue = basicConstraints.getEncoded(ASN1Encoding.DER);
     Extension extension = new Extension(Extension.basicConstraints, true, extValue);

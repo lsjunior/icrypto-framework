@@ -15,8 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.DatatypeConverter;
-
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSDictionary;
@@ -50,6 +49,7 @@ import com.github.lsjunior.icrypto.core.certificate.util.Certificates;
 import com.github.lsjunior.icrypto.ext.icpbrasil.signature.IcpBrasilCommitmentType;
 import com.google.common.base.Strings;
 import com.google.common.hash.Hashing;
+import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteSource;
 
 public abstract class PdfBoxServiceHelper {
@@ -63,7 +63,7 @@ public abstract class PdfBoxServiceHelper {
       return false;
     }
 
-    PDDocument doc = PDDocument.load(data.openStream());
+    PDDocument doc = Loader.loadPDF(data.read());
     List<PDSignature> pdSignatureList = doc.getSignatureDictionaries();
     if ((pdSignatureList != null) && (!pdSignatureList.isEmpty())) {
       return true;
@@ -71,7 +71,7 @@ public abstract class PdfBoxServiceHelper {
     return false;
   }
 
-  public static PDSignature getLastSignature(final PDDocument pdDocument) throws IOException {
+  public static PDSignature getLastSignature(final PDDocument pdDocument) {
     List<PDSignature> pdSignatureList = pdDocument.getSignatureDictionaries();
     if ((pdSignatureList != null) && (!pdSignatureList.isEmpty())) {
       PDSignature pdSignature = null;
@@ -90,41 +90,40 @@ public abstract class PdfBoxServiceHelper {
 
   @SuppressWarnings("deprecation")
   public static boolean isLastSignatureMatching(final ByteSource original, final ByteSource signed) throws IOException {
-    try (PDDocument pdDocument = PDDocument.load(signed.openStream())) {
-      PDSignature pdSignature = PdfBoxServiceHelper.getLastSignature(pdDocument);
-      COSDictionary dict = pdSignature.getCOSObject();
-      COSDictionary digestDictionary = dict.getCOSDictionary(COSName.getPDFName("Digest"));
-      if (digestDictionary != null) {
+    PDDocument pdDocument = Loader.loadPDF(signed.read());
+    PDSignature pdSignature = PdfBoxServiceHelper.getLastSignature(pdDocument);
+    COSDictionary dict = pdSignature.getCOSObject();
+    COSDictionary digestDictionary = dict.getCOSDictionary(COSName.getPDFName("Digest"));
+    if (digestDictionary != null) {
 
-        String sha512 = digestDictionary.getString(COSName.DIGEST_SHA512);
-        if (sha512 != null) {
-          String originalHash = original.hash(Hashing.sha512()).toString().toLowerCase();
-          if (sha512.equalsIgnoreCase(originalHash)) {
-            return true;
-          }
-          return false;
+      String sha512 = digestDictionary.getString(COSName.DIGEST_SHA512);
+      if (sha512 != null) {
+        String originalHash = original.hash(Hashing.sha512()).toString().toLowerCase();
+        if (sha512.equalsIgnoreCase(originalHash)) {
+          return true;
         }
-
-        String sha256 = digestDictionary.getString(COSName.DIGEST_SHA256);
-        if (sha256 != null) {
-          String originalHash = original.hash(Hashing.sha256()).toString().toLowerCase();
-          if (sha256.equalsIgnoreCase(originalHash)) {
-            return true;
-          }
-          return false;
-        }
-
-        String sha1 = digestDictionary.getString(COSName.DIGEST_SHA1);
-        if (sha1 != null) {
-          String originalHash = original.hash(Hashing.sha1()).toString().toLowerCase();
-          if (sha1.equalsIgnoreCase(originalHash)) {
-            return true;
-          }
-          return false;
-        }
+        return false;
       }
-      return false;
+
+      String sha256 = digestDictionary.getString(COSName.DIGEST_SHA256);
+      if (sha256 != null) {
+        String originalHash = original.hash(Hashing.sha256()).toString().toLowerCase();
+        if (sha256.equalsIgnoreCase(originalHash)) {
+          return true;
+        }
+        return false;
+      }
+
+      String sha1 = digestDictionary.getString(COSName.DIGEST_SHA1);
+      if (sha1 != null) {
+        String originalHash = original.hash(Hashing.sha1()).toString().toLowerCase();
+        if (sha1.equalsIgnoreCase(originalHash)) {
+          return true;
+        }
+        return false;
+      }
     }
+    return false;
   }
 
   public static int getMDPPermission(final PDDocument document) {
@@ -223,7 +222,7 @@ public abstract class PdfBoxServiceHelper {
     int height = visibleSignature.getHeight();
     int zoom = visibleSignature.getZoom();
 
-    PDVisibleSignDesigner pdVisibleSignDesigner = new PDVisibleSignDesigner(data.openStream(), new FileInputStream(image), page);
+    PDVisibleSignDesigner pdVisibleSignDesigner = new PDVisibleSignDesigner(Loader.loadPDF(data.read()), new FileInputStream(image), page);
     pdVisibleSignDesigner.height(height);
     pdVisibleSignDesigner.width(width);
     pdVisibleSignDesigner.xAxis(left);
@@ -467,7 +466,7 @@ public abstract class PdfBoxServiceHelper {
 
   public static COSStream toStream(final Map<String, COSStream> streams, final byte[] data) throws IOException {
     byte[] hash = Hashing.sha256().hashBytes(data).asBytes();
-    String hex = DatatypeConverter.printHexBinary(hash);
+    String hex = BaseEncoding.base16().encode(hash);
     COSStream stream = streams.get(hex);
 
     if (stream == null) {

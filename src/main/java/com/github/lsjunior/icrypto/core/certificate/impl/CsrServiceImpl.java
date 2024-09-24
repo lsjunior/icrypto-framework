@@ -3,7 +3,9 @@ package com.github.lsjunior.icrypto.core.certificate.impl;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.bouncycastle.asn1.ASN1IA5String;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
@@ -99,9 +101,9 @@ public class CsrServiceImpl extends AbstractCertificateManager implements CsrSer
                 ASN1IA5String deria5String = ASN1IA5String.getInstance(policyQualifierInfo.getQualifier());
                 String oid = policyInformation.getPolicyIdentifier().getId();
                 String value = deria5String.getString();
-                certificateRequest.getCertificatePolicies().put(oid, value);
+                Map<String, String> map = Collections.singletonMap(policyQualifierInfo.getPolicyQualifierId().getId(), value);
+                certificateRequest.getCertificatePolicies().put(oid, map);
               }
-
             } else if (extension.getExtnId().getId().equals(Extension.subjectAlternativeName.getId())) {
               GeneralNames generalNames = GeneralNames.getInstance(extension.getExtnValue().getOctets());
               for (GeneralName generalName : generalNames.getNames()) {

@@ -1,6 +1,10 @@
 package com.github.lsjunior.icrypto.ext.icpbrasil.certificate;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bouncycastle.asn1.x509.PolicyQualifierId;
 
 import com.github.lsjunior.icrypto.ICryptoConstants;
 import com.github.lsjunior.icrypto.core.certificate.CertificateExtension;
@@ -41,7 +45,9 @@ public abstract class IcpBrasilExtension implements CertificateExtension, Serial
           break;
       }
       if (!Strings.isNullOrEmpty(key)) {
-        request.getCertificatePolicies().put(key, IcpBrasilExtension.URL_DEFAULT);
+        Map<String, String> map = new HashMap<>();
+        map.put(PolicyQualifierId.id_qt_cps.getId(), IcpBrasilExtension.URL_DEFAULT);
+        request.getCertificatePolicies().put(key, map);
       }
     }
     return request;

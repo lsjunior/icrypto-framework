@@ -20,7 +20,9 @@ public class Pkcs7CertificateReader implements CertificateReader, Serializable {
 
   private static final long serialVersionUID = ICryptoConstants.VERSION;
 
-  public Pkcs7CertificateReader() {
+  private static final Pkcs7CertificateReader INSTANCE = new Pkcs7CertificateReader();
+
+  private Pkcs7CertificateReader() {
     super();
   }
 
@@ -75,6 +77,10 @@ public class Pkcs7CertificateReader implements CertificateReader, Serializable {
       }
     }
     return null;
+  }
+
+  public static Pkcs7CertificateReader getInstance() {
+    return Pkcs7CertificateReader.INSTANCE;
   }
 
 }

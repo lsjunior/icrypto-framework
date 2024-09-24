@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 import javax.xml.transform.TransformerException;
 
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSDictionary;
@@ -97,7 +98,7 @@ public class PdfBoxService extends AbstractPadesService implements Serializable 
 
     File outputFile = File.createTempFile("pdfbox-service", ".pdf");
 
-    PDDocument document = PDDocument.load(data.openStream());
+    PDDocument document = Loader.loadPDF(data.read());
 
     int accessPermissions = PdfBoxServiceHelper.getMDPPermission(document);
     if (accessPermissions == 1) {
@@ -173,16 +174,16 @@ public class PdfBoxService extends AbstractPadesService implements Serializable 
 
       outputFile = fileTmp;
 
-      PDDocument signed = PDDocument.load(fileTmp);
+      PDDocument signed = Loader.loadPDF(fileTmp);
       this.updateDocumentDictionary(signed, cms);
       FileOutputStream outputStream = new FileOutputStream(outputFile);
       signed.saveIncremental(outputStream);
       outputStream.close();
       signatureOptions.close();
 
-      /*if (fileTmp.exists()) {
-        fileTmp.delete();
-      }*/
+      /*
+       * if (fileTmp.exists()) { fileTmp.delete(); }
+       */
     } else {
       document.addSignature(signature, signatureInterface, signatureOptions);
       FileOutputStream outputStream = new FileOutputStream(outputFile);
@@ -350,70 +351,68 @@ public class PdfBoxService extends AbstractPadesService implements Serializable 
       throw new ICryptoException("PDF is empty");
     }
 
-    try (InputStream inputStream = signature.openStream()) {
-      try (PDDocument doc = PDDocument.load(inputStream)) {
-        List<PDSignature> pdSignatureList = doc.getSignatureDictionaries();
-        if ((pdSignatureList != null) && (!pdSignatureList.isEmpty())) {
-          PadesVerificationResult padesResult = new PadesVerificationResult();
-          padesResult.setDocument(new Document());
-          padesResult.getDocument().setCertificates(new ArrayList<>());
-          padesResult.getDocument().setContent(signature);
-          padesResult.getDocument().setCrls(new ArrayList<>());
-          padesResult.getDocument().setErrors(new ArrayList<>());
-          padesResult.getDocument().setSignatures(new ArrayList<>());
+    try (PDDocument doc = Loader.loadPDF(signature.read())) {
+      List<PDSignature> pdSignatureList = doc.getSignatureDictionaries();
+      if ((pdSignatureList != null) && (!pdSignatureList.isEmpty())) {
+        PadesVerificationResult padesResult = new PadesVerificationResult();
+        padesResult.setDocument(new Document());
+        padesResult.getDocument().setCertificates(new ArrayList<>());
+        padesResult.getDocument().setContent(signature);
+        padesResult.getDocument().setCrls(new ArrayList<>());
+        padesResult.getDocument().setErrors(new ArrayList<>());
+        padesResult.getDocument().setSignatures(new ArrayList<>());
 
-          for (PDSignature pdSignature : pdSignatureList) {
-            try {
-              String filter = pdSignature.getFilter();
-              String subFilter = pdSignature.getSubFilter();
-              if (PDSignature.FILTER_ADOBE_PPKLITE.getName().equals(filter)) {
-                PadesVerificationResult tmpResult = null;
-                if ((PDSignature.SUBFILTER_ETSI_CADES_DETACHED.getName().equals(subFilter)) || (PDSignature.SUBFILTER_ADBE_PKCS7_DETACHED.getName().equals(subFilter))) {
-                  tmpResult = this.doVerifyEtsi(parameters, signature, pdSignature);
-                } else if ((PDSignature.SUBFILTER_ADBE_PKCS7_SHA1.getName().equals(subFilter))) {
-                  tmpResult = this.doVerifyPkcs7Sha1(parameters, signature, pdSignature);
-                } else if ((PDSignature.SUBFILTER_ADBE_X509_RSA_SHA1.getName().equals(subFilter))) {
-                  tmpResult = this.doVerifyX509Sha1(signature, pdSignature);
-                } else {
-                  // ETSI.RFC3161 https://www.etsi.org/deliver/etsi_ts/102700_102799/10277804/01.01.02_60/ts_10277804v010102p.pdf
-                  String msg = String.format("Invalid PDF Signature SubFilter '%s'", subFilter);
-                  com.github.lsjunior.icrypto.api.model.Signature tmpSignature = this.getErrorSignature(filter, subFilter, PadesErrors.SUBFILTER_INVALID, msg);
-                  padesResult.getDocument().getSignatures().add(tmpSignature);
-                }
-
-                if (tmpResult != null) {
-                  for (com.github.lsjunior.icrypto.api.model.Signature s : tmpResult.getDocument().getSignatures()) {
-                    s.setFilter(filter);
-                    s.setSubFilter(subFilter);
-                  }
-                  padesResult.getDocument().getSignatures().addAll(tmpResult.getDocument().getSignatures());
-                }
+        for (PDSignature pdSignature : pdSignatureList) {
+          try {
+            String filter = pdSignature.getFilter();
+            String subFilter = pdSignature.getSubFilter();
+            if (PDSignature.FILTER_ADOBE_PPKLITE.getName().equals(filter)) {
+              PadesVerificationResult tmpResult = null;
+              if ((PDSignature.SUBFILTER_ETSI_CADES_DETACHED.getName().equals(subFilter)) || (PDSignature.SUBFILTER_ADBE_PKCS7_DETACHED.getName().equals(subFilter))) {
+                tmpResult = this.doVerifyEtsi(parameters, signature, pdSignature);
+              } else if ((PDSignature.SUBFILTER_ADBE_PKCS7_SHA1.getName().equals(subFilter))) {
+                tmpResult = this.doVerifyPkcs7Sha1(parameters, signature, pdSignature);
+              } else if ((PDSignature.SUBFILTER_ADBE_X509_RSA_SHA1.getName().equals(subFilter))) {
+                tmpResult = this.doVerifyX509Sha1(signature, pdSignature);
               } else {
-                String msg = String.format("Invalid PDF Signature Filter '%s'", filter);
-                com.github.lsjunior.icrypto.api.model.Signature tmpSignature = this.getErrorSignature(filter, subFilter, PadesErrors.FILTER_INVALID, msg);
+                // ETSI.RFC3161 https://www.etsi.org/deliver/etsi_ts/102700_102799/10277804/01.01.02_60/ts_10277804v010102p.pdf
+                String msg = String.format("Invalid PDF Signature SubFilter '%s'", subFilter);
+                com.github.lsjunior.icrypto.api.model.Signature tmpSignature = this.getErrorSignature(filter, subFilter, PadesErrors.SUBFILTER_INVALID, msg);
                 padesResult.getDocument().getSignatures().add(tmpSignature);
               }
-            } catch (Exception e) {
-              ICryptoLog.getLogger().warn(e.getMessage(), e);
-              padesResult.getDocument().getErrors().add(new ErrorMessage(PadesErrors.UNCAUGHT_ERROR, e.getMessage(), true));
-            }
-          }
 
-          boolean valid = true;
-          for (com.github.lsjunior.icrypto.api.model.Signature s : padesResult.getDocument().getSignatures()) {
-            for (ErrorMessage e : s.getErrors()) {
-              if (e.isFatal()) {
-                valid = false;
-                break;
+              if (tmpResult != null) {
+                for (com.github.lsjunior.icrypto.api.model.Signature s : tmpResult.getDocument().getSignatures()) {
+                  s.setFilter(filter);
+                  s.setSubFilter(subFilter);
+                }
+                padesResult.getDocument().getSignatures().addAll(tmpResult.getDocument().getSignatures());
               }
+            } else {
+              String msg = String.format("Invalid PDF Signature Filter '%s'", filter);
+              com.github.lsjunior.icrypto.api.model.Signature tmpSignature = this.getErrorSignature(filter, subFilter, PadesErrors.FILTER_INVALID, msg);
+              padesResult.getDocument().getSignatures().add(tmpSignature);
+            }
+          } catch (Exception e) {
+            ICryptoLog.getLogger().warn(e.getMessage(), e);
+            padesResult.getDocument().getErrors().add(new ErrorMessage(PadesErrors.UNCAUGHT_ERROR, e.getMessage(), true));
+          }
+        }
+
+        boolean valid = true;
+        for (com.github.lsjunior.icrypto.api.model.Signature s : padesResult.getDocument().getSignatures()) {
+          for (ErrorMessage e : s.getErrors()) {
+            if (e.isFatal()) {
+              valid = false;
+              break;
             }
           }
-          padesResult.setValid(valid);
-
-          return padesResult;
         }
-        return null;
+        padesResult.setValid(valid);
+
+        return padesResult;
       }
+      return null;
     }
   }
 

@@ -10,8 +10,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.DatatypeConverter;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -22,6 +20,7 @@ import com.github.lsjunior.icrypto.ICryptoLog;
 import com.github.lsjunior.icrypto.core.util.BcProvider;
 import com.google.common.base.Strings;
 import com.google.common.hash.Hashing;
+import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import com.lowagie.text.pdf.AcroFields;
@@ -218,7 +217,7 @@ public abstract class ITextPdfServiceHelper {
   // ITextPDFSignatureService
   public static PdfObject toStream(final PdfWriter writer, final Map<String, PdfObject> streams, final byte[] data) throws IOException {
     byte[] hash = Hashing.sha256().hashBytes(data).asBytes();
-    String hex = DatatypeConverter.printHexBinary(hash);
+    String hex = BaseEncoding.base16().encode(hash);
     PdfObject obj = streams.get(hex);
 
     if (obj == null) {

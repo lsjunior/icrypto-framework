@@ -18,8 +18,8 @@ import java.util.Set;
 import org.bouncycastle.asn1.ASN1IA5String;
 import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.asn1.ASN1TaggedObject;
 import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.DERTaggedObject;
 import org.bouncycastle.asn1.ocsp.BasicOCSPResponse;
 import org.bouncycastle.asn1.ocsp.OCSPObjectIdentifiers;
 import org.bouncycastle.asn1.ocsp.OCSPResponseStatus;
@@ -111,8 +111,8 @@ public abstract class Ocsps {
       String currentId = description.getAccessMethod().getId();
       if (ocspId.equals(currentId)) {
         GeneralName generalName = description.getAccessLocation();
-        DERTaggedObject taggedObject = (DERTaggedObject) generalName.toASN1Primitive();
-        ASN1IA5String ia5String = ASN1IA5String.getInstance(taggedObject.toASN1Primitive());
+        ASN1TaggedObject taggedObject = (ASN1TaggedObject) generalName.toASN1Primitive();
+        ASN1IA5String ia5String = ASN1IA5String.getInstance(taggedObject.getBaseObject());
         String urlStr = ia5String.getString();
         urls.add(urlStr);
       }

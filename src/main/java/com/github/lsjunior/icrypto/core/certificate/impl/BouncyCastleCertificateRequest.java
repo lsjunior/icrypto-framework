@@ -80,7 +80,7 @@ public class BouncyCastleCertificateRequest implements Serializable {
 
   private final Set<SubjectAlternativeName> alternativeNames;
 
-  private final Map<String, String> certificatePolicies;
+  private final Map<String, Map<String, String>> certificatePolicies;
 
   public BouncyCastleCertificateRequest(final CertificateParameters request) throws NoSuchAlgorithmException {
     super();
@@ -214,7 +214,7 @@ public class BouncyCastleCertificateRequest implements Serializable {
     return this.alternativeNames;
   }
 
-  public Map<String, String> getCertificatePolicies() {
+  public Map<String, Map<String, String>> getCertificatePolicies() {
     return this.certificatePolicies;
   }
 

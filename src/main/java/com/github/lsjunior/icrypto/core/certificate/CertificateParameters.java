@@ -63,7 +63,7 @@ public class CertificateParameters implements Serializable {
 
   private Set<SubjectAlternativeName> alternativeNames;
 
-  private Map<String, String> certificatePolicies;
+  private Map<String, Map<String, String>> certificatePolicies;
 
   private List<CertificateExtension> extensions;
 
@@ -234,11 +234,11 @@ public class CertificateParameters implements Serializable {
     this.alternativeNames = alternativeNames;
   }
 
-  public Map<String, String> getCertificatePolicies() {
+  public Map<String, Map<String, String>> getCertificatePolicies() {
     return this.certificatePolicies;
   }
 
-  public void setCertificatePolicies(final Map<String, String> certificatePolicies) {
+  public void setCertificatePolicies(final Map<String, Map<String, String>> certificatePolicies) {
     this.certificatePolicies = certificatePolicies;
   }
 
