@@ -12,17 +12,23 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
     steps:
       # https://github.com/actions/checkout/tags
       # https://github.com/actions/setup-java/tags
       - uses: actions/checkout@v4
+      - name: Configure Git User
+        run: |
+          git config --global user.name "Lourival Sabino(Github Actions)"
+          git config --global user.email "lourival.sabino.junior@gmail.com"
       - uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
       - name: Build and release
-        run: mvn --batch-mode release:prepare && mvn --batch-mode release:perform
+        run: |
+          mvn --batch-mode release:prepare
+          mvn --batch-mode release:perform
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
