@@ -27,7 +27,7 @@ public class CommonRules extends ASN1Object {
     for (int i = 0; i < sequence.size(); i++) {
       ASN1TaggedObject taggedObject = (ASN1TaggedObject) sequence.getObjectAt(i);
       int tagNo = taggedObject.getTagNo();
-      Object obj = taggedObject.toASN1Primitive();
+      Object obj = taggedObject.getBaseObject();
       switch (tagNo) {
         case 0:
           this.signerAndVerifierRules = SignerAndVerifierRules.getInstance(obj);
@@ -53,9 +53,8 @@ public class CommonRules extends ASN1Object {
     }
   }
 
-  public CommonRules(final SignerAndVerifierRules signerAndVeriferRules, final SigningCertTrustCondition signingCertTrustCondition,
-      final TimestampTrustCondition timeStampTrustCondition, final AttributeTrustCondition attributeTrustCondition,
-      final AlgorithmConstraintSet algorithmConstraintSet, final SignPolExtensions signPolExtensions) {
+  public CommonRules(final SignerAndVerifierRules signerAndVeriferRules, final SigningCertTrustCondition signingCertTrustCondition, final TimestampTrustCondition timeStampTrustCondition,
+      final AttributeTrustCondition attributeTrustCondition, final AlgorithmConstraintSet algorithmConstraintSet, final SignPolExtensions signPolExtensions) {
     super();
     this.signerAndVerifierRules = signerAndVeriferRules;
     this.signingCertTrustCondition = signingCertTrustCondition;
@@ -91,10 +90,8 @@ public class CommonRules extends ASN1Object {
 
   @Override
   public ASN1Primitive toASN1Primitive() {
-    return Asn1Objects.toAsn1Sequence(Asn1Objects.toAsn1TaggedObject(this.signerAndVerifierRules, 0),
-        Asn1Objects.toAsn1TaggedObject(this.signingCertTrustCondition, 1), Asn1Objects.toAsn1TaggedObject(this.timeStampTrustCondition, 2),
-        Asn1Objects.toAsn1TaggedObject(this.attributeTrustCondition, 3), Asn1Objects.toAsn1TaggedObject(this.algorithmConstraintSet, 4),
-        Asn1Objects.toAsn1TaggedObject(this.signPolExtensions, 5));
+    return Asn1Objects.toAsn1Sequence(Asn1Objects.toAsn1TaggedObject(this.signerAndVerifierRules, 0), Asn1Objects.toAsn1TaggedObject(this.signingCertTrustCondition, 1), Asn1Objects.toAsn1TaggedObject(this.timeStampTrustCondition, 2),
+        Asn1Objects.toAsn1TaggedObject(this.attributeTrustCondition, 3), Asn1Objects.toAsn1TaggedObject(this.algorithmConstraintSet, 4), Asn1Objects.toAsn1TaggedObject(this.signPolExtensions, 5));
   }
 
   public static CommonRules getInstance(final Object obj) {

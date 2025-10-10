@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +44,7 @@ public class CadesSignatureContext implements Serializable {
 
   private boolean ignoreSigningTime;
 
-  private Date date;
+  private LocalDateTime date;
 
   private String contentName;
 
@@ -166,11 +166,11 @@ public class CadesSignatureContext implements Serializable {
     this.ignoreSigningTime = ignoreSigningTime;
   }
 
-  public Date getDate() {
+  public LocalDateTime getDate() {
     return this.date;
   }
 
-  public void setDate(final Date date) {
+  public void setDate(final LocalDateTime date) {
     this.date = date;
   }
 

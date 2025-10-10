@@ -25,7 +25,7 @@ public class AlgorithmConstraintSet extends ASN1Object {
     for (int i = 0; i < sequence.size(); i++) {
       ASN1TaggedObject taggedObject = (ASN1TaggedObject) sequence.getObjectAt(i);
       int tagNo = taggedObject.getTagNo();
-      Object obj = taggedObject.toASN1Primitive();
+      Object obj = taggedObject.getBaseObject();
       switch (tagNo) {
         case 0:
           this.signerAlgorithmConstraints = AlgorithmConstraints.getInstance(obj);

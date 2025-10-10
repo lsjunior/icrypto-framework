@@ -19,7 +19,7 @@ import com.github.lsjunior.icrypto.core.certificate.CertificateValidator;
 import com.github.lsjunior.icrypto.core.certificate.ValidationError;
 import com.github.lsjunior.icrypto.core.certificate.util.Certificates;
 import com.github.lsjunior.icrypto.core.ocsp.OcspProvider;
-import com.github.lsjunior.icrypto.core.ocsp.impl.SimpleOcspProvider;
+import com.github.lsjunior.icrypto.core.ocsp.impl.DefaultOcspProvider;
 
 public class OcspCertificateValidator implements CertificateValidator {
 
@@ -30,7 +30,7 @@ public class OcspCertificateValidator implements CertificateValidator {
   private final boolean ignoreTryLater;
 
   public OcspCertificateValidator() {
-    this(new SimpleOcspProvider());
+    this(new DefaultOcspProvider());
   }
 
   public OcspCertificateValidator(final OcspProvider ocspProvider) {

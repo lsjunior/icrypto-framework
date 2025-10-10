@@ -2,7 +2,7 @@ package com.github.lsjunior.icrypto.core.crl;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,9 +14,9 @@ public class CrlParameters implements Serializable {
 
   private BigInteger number;
 
-  private Date thisUpdate;
+  private LocalDateTime thisUpdate;
 
-  private Date nextUpdate;
+  private LocalDateTime nextUpdate;
 
   private byte[] oldCrl;
 
@@ -26,7 +26,7 @@ public class CrlParameters implements Serializable {
     this(BigInteger.ONE, null, null);
   }
 
-  public CrlParameters(final BigInteger number, final Date thisUpdate, final Date nextUpdate) {
+  public CrlParameters(final BigInteger number, final LocalDateTime thisUpdate, final LocalDateTime nextUpdate) {
     super();
     this.number = number;
     this.thisUpdate = thisUpdate;
@@ -42,19 +42,19 @@ public class CrlParameters implements Serializable {
     this.number = number;
   }
 
-  public Date getThisUpdate() {
+  public LocalDateTime getThisUpdate() {
     return this.thisUpdate;
   }
 
-  public void setThisUpdate(final Date thisUpdate) {
+  public void setThisUpdate(final LocalDateTime thisUpdate) {
     this.thisUpdate = thisUpdate;
   }
 
-  public Date getNextUpdate() {
+  public LocalDateTime getNextUpdate() {
     return this.nextUpdate;
   }
 
-  public void setNextUpdate(final Date nextUpdate) {
+  public void setNextUpdate(final LocalDateTime nextUpdate) {
     this.nextUpdate = nextUpdate;
   }
 

@@ -43,7 +43,7 @@ public enum KeyUsageType {
 
   public static KeyUsageType get(final int usage) {
     for (KeyUsageType ku : KeyUsageType.values()) {
-      if (ku.getUsage() == usage) {
+      if (ku.getIndex() == usage) {
         return ku;
       }
     }

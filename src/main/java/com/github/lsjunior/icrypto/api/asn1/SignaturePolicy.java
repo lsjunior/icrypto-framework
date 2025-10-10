@@ -66,6 +66,7 @@ public class SignaturePolicy extends ASN1Object {
         return SignaturePolicy.getInstance(tmp);
       } catch (Exception e) {
         ICryptoLog.getLogger().info(e.getMessage(), e);
+        e.printStackTrace();
         throw new IllegalArgumentException("encoding error in getInstance: " + e.toString());
       }
     }

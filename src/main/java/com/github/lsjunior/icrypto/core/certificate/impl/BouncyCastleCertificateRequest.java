@@ -11,8 +11,6 @@ import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,9 +54,9 @@ public class BouncyCastleCertificateRequest implements Serializable {
 
   private BigInteger serialNumber;
 
-  private Date notBefore;
+  private LocalDateTime notBefore;
 
-  private Date notAfter;
+  private LocalDateTime notAfter;
 
   private final String comment;
 
@@ -128,13 +126,11 @@ public class BouncyCastleCertificateRequest implements Serializable {
     }
 
     if (this.notBefore == null) {
-      LocalDateTime localDateTime = LocalDateTime.now().minusDays(1);
-      this.notBefore = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+      this.notBefore = LocalDateTime.now().minusDays(1);
     }
 
     if (this.notAfter == null) {
-      LocalDateTime localDateTime = LocalDateTime.now().plusYears(1);
-      this.notAfter = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+      this.notAfter = LocalDateTime.now().plusYears(1);
     }
 
     if (this.provider == null) {
@@ -166,11 +162,11 @@ public class BouncyCastleCertificateRequest implements Serializable {
     return this.serialNumber;
   }
 
-  public Date getNotBefore() {
+  public LocalDateTime getNotBefore() {
     return this.notBefore;
   }
 
-  public Date getNotAfter() {
+  public LocalDateTime getNotAfter() {
     return this.notAfter;
   }
 

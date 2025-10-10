@@ -3,12 +3,12 @@ package com.github.lsjunior.icrypto.ext.icpbrasil.certificate;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
+import org.bouncycastle.asn1.ASN1Object;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
@@ -46,12 +46,12 @@ abstract class IcpBrasilHelper {
     return IcpBrasilHelper.rpad(s, ConstantesIcp.COMPLEMENTO_TEXTO, size);
   }
 
-  public static String getDateValue(final Date value) {
-    Date d = value;
+  public static String getDateValue(final LocalDate value) {
+    LocalDate d = value;
     if (d == null) {
-      d = new Date();
+      d = LocalDate.now();
     }
-    return new SimpleDateFormat(ConstantesIcp.FORMATO_DATA).format(d);
+    return DateTimeFormatter.ofPattern(ConstantesIcp.FORMATO_DATA).format(d);
   }
 
   public static String getValueFromNumeric(final String numeric) {
@@ -72,11 +72,11 @@ abstract class IcpBrasilHelper {
     return builder.toString();
   }
 
-  public static Date getDateFromString(final String date) throws ParseException {
+  public static LocalDate getDateFromString(final String date) {
     if (Strings.isNullOrEmpty(date)) {
       return null;
     }
-    return new SimpleDateFormat(ConstantesIcp.FORMATO_DATA).parse(date);
+    return LocalDate.parse(date, DateTimeFormatter.ofPattern(ConstantesIcp.FORMATO_DATA));
   }
 
   public static String toString(final byte[] bytes) {
@@ -121,17 +121,17 @@ abstract class IcpBrasilHelper {
           String value = null;
           if (primitive instanceof ASN1TaggedObject) {
             ASN1TaggedObject tmpTaggedObject = (ASN1TaggedObject) primitive;
-            ASN1Sequence sequence = (ASN1Sequence) tmpTaggedObject.toASN1Primitive();
+            ASN1Sequence sequence = (ASN1Sequence) tmpTaggedObject.getBaseObject();
             ASN1ObjectIdentifier identifier = (ASN1ObjectIdentifier) sequence.getObjectAt(0);
-            ASN1Primitive string = ((ASN1TaggedObject) sequence.getObjectAt(1)).toASN1Primitive();
+            ASN1Object string = ((ASN1TaggedObject) sequence.getObjectAt(1)).getBaseObject();
             oid = identifier.getId();
             value = Asn1Objects.toString(string, ConstantesIcp.DEFAULT_CHARSET);
           } else {
             ASN1Sequence sequence = (ASN1Sequence) primitive;
             ASN1ObjectIdentifier identifier = (ASN1ObjectIdentifier) sequence.getObjectAt(0);
-            ASN1TaggedObject taggedObject = (ASN1TaggedObject) ((ASN1TaggedObject) sequence.getObjectAt(1)).toASN1Primitive();
+            ASN1Object baseObject = ((ASN1TaggedObject) sequence.getObjectAt(1)).getBaseObject();
+            value = Asn1Objects.toString(baseObject, ConstantesIcp.DEFAULT_CHARSET);
             oid = identifier.getId();
-            value = Asn1Objects.toString(taggedObject, ConstantesIcp.DEFAULT_CHARSET);
           }
 
           if (Strings.isNullOrEmpty(value)) {
@@ -176,7 +176,7 @@ abstract class IcpBrasilHelper {
             nomeEmpresarialPj = value;
           } else {
             // Conselhos
-            for(TipoConselhoFederal item : TipoConselhoFederal.values()) {
+            for (TipoConselhoFederal item : TipoConselhoFederal.values()) {
               if (oid.startsWith(item.getPrefix())) {
                 tipoConselhoFederal = item;
                 if (oid.startsWith(item.getPrefix() + ConstantesIcp.SUFFIX_OID_CONSELHO_NUMERO)) {
@@ -204,7 +204,7 @@ abstract class IcpBrasilHelper {
       if ((tipoConselhoFederal != null) && (numeroConselhoFederal != null) && (ufConselhoFederal != null) && (especialidadeConselhoFederal != null)) {
         dadoConselhoFederal = new DadoConselhoFederal(numeroConselhoFederal, ufConselhoFederal, especialidadeConselhoFederal, tipoConselhoFederal);
       }
-      
+
       if ((tipoPessoa == TipoPessoa.PESSOA_FISICA) && (dadoPessoa != null)) {
         CertificadoPf certPF = new CertificadoPf(certificate);
         certPF.setCei(ceiPf);

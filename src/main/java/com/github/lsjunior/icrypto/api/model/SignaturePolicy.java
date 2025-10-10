@@ -1,7 +1,7 @@
 package com.github.lsjunior.icrypto.api.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import com.github.lsjunior.icrypto.ICryptoConstants;
@@ -21,9 +21,9 @@ public class SignaturePolicy implements Serializable {
 
   private byte[] digestValue;
 
-  private Date notBefore;
+  private LocalDateTime notBefore;
 
-  private Date notAfter;
+  private LocalDateTime notAfter;
 
   private boolean detached;
 
@@ -83,19 +83,19 @@ public class SignaturePolicy implements Serializable {
     this.digestValue = digestValue;
   }
 
-  public Date getNotBefore() {
+  public LocalDateTime getNotBefore() {
     return this.notBefore;
   }
 
-  public void setNotBefore(final Date notBefore) {
+  public void setNotBefore(final LocalDateTime notBefore) {
     this.notBefore = notBefore;
   }
 
-  public Date getNotAfter() {
+  public LocalDateTime getNotAfter() {
     return this.notAfter;
   }
 
-  public void setNotAfter(final Date notAfter) {
+  public void setNotAfter(final LocalDateTime notAfter) {
     this.notAfter = notAfter;
   }
 

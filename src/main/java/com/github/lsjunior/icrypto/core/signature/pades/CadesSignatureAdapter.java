@@ -17,9 +17,9 @@ import com.github.lsjunior.icrypto.ICryptoException;
 import com.github.lsjunior.icrypto.ICryptoLog;
 import com.github.lsjunior.icrypto.api.model.CertificateRevocationData;
 import com.github.lsjunior.icrypto.core.crl.CrlProvider;
-import com.github.lsjunior.icrypto.core.crl.impl.SimpleCrlProvider;
+import com.github.lsjunior.icrypto.core.crl.impl.DefaultCrlProvider;
 import com.github.lsjunior.icrypto.core.ocsp.OcspProvider;
-import com.github.lsjunior.icrypto.core.ocsp.impl.SimpleOcspProvider;
+import com.github.lsjunior.icrypto.core.ocsp.impl.DefaultOcspProvider;
 import com.github.lsjunior.icrypto.core.signature.cms.CadesService;
 import com.github.lsjunior.icrypto.core.signature.cms.CadesServiceHelper;
 import com.github.lsjunior.icrypto.core.signature.cms.CadesSignature;
@@ -45,10 +45,10 @@ public class CadesSignatureAdapter {
         OcspProvider ocspProvider = this.parameters.getOcspProvider();
 
         if (crlProvider == null) {
-          crlProvider = new SimpleCrlProvider();
+          crlProvider = new DefaultCrlProvider();
         }
         if (ocspProvider == null) {
-          ocspProvider = new SimpleOcspProvider();
+          ocspProvider = new DefaultOcspProvider();
         }
 
         List<Certificate> chain = this.parameters.getIdentity().getChain();

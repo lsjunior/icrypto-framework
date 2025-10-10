@@ -3,7 +3,7 @@ package com.github.lsjunior.icrypto.api.model;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.cert.Certificate;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.github.lsjunior.icrypto.ICryptoConstants;
@@ -18,7 +18,7 @@ public class TimeStamp implements Serializable {
 
   private BigInteger serialNumber;
 
-  private Date date;
+  private LocalDateTime date;
 
   private byte[] encoded;
 
@@ -56,11 +56,11 @@ public class TimeStamp implements Serializable {
     this.serialNumber = serialNumber;
   }
 
-  public Date getDate() {
+  public LocalDateTime getDate() {
     return this.date;
   }
 
-  public void setDate(final Date date) {
+  public void setDate(final LocalDateTime date) {
     this.date = date;
   }
 

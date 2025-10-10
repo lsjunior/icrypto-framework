@@ -61,8 +61,15 @@ public enum ExtendedKeyUsageType {
 
   public static ExtendedKeyUsageType get(final ASN1ObjectIdentifier asn1ObjectIdentifier) {
     if (asn1ObjectIdentifier != null) {
+      return ExtendedKeyUsageType.get(asn1ObjectIdentifier.getId());
+    }
+    return null;
+  }
+
+  public static ExtendedKeyUsageType get(final String oid) {
+    if (oid != null) {
       for (ExtendedKeyUsageType eku : ExtendedKeyUsageType.values()) {
-        if (eku.getKeyPurposeId().getId().equals(asn1ObjectIdentifier.getId())) {
+        if (eku.getKeyPurposeId().getId().equals(oid)) {
           return eku;
         }
       }

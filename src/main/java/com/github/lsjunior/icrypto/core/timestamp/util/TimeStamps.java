@@ -22,6 +22,7 @@ import com.github.lsjunior.icrypto.api.model.TimeStamp;
 import com.github.lsjunior.icrypto.api.type.SignatureType;
 import com.github.lsjunior.icrypto.core.certificate.util.Certificates;
 import com.github.lsjunior.icrypto.core.util.Asn1Objects;
+import com.github.lsjunior.icrypto.core.util.Dates;
 
 public abstract class TimeStamps {
 
@@ -44,7 +45,7 @@ public abstract class TimeStamps {
     TimeStampTokenInfo timeStampTokenInfo = timeStampToken.getTimeStampInfo();
 
     TimeStamp timeStamp = new TimeStamp();
-    timeStamp.setDate(timeStampTokenInfo.getGenTime());
+    timeStamp.setDate(Dates.toLocalDateTime(timeStampTokenInfo.getGenTime()));
     timeStamp.setDigest(timeStampTokenInfo.getMessageImprintDigest());
     timeStamp.setEncoded(timeStampToken.getEncoded());
     timeStamp.setNonce(timeStampTokenInfo.getNonce());

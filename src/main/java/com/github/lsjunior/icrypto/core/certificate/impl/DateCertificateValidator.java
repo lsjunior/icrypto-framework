@@ -5,6 +5,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -15,6 +16,7 @@ import com.github.lsjunior.icrypto.ICryptoException;
 import com.github.lsjunior.icrypto.ICryptoLog;
 import com.github.lsjunior.icrypto.core.certificate.CertificateValidator;
 import com.github.lsjunior.icrypto.core.certificate.ValidationError;
+import com.github.lsjunior.icrypto.core.util.Dates;
 
 public class DateCertificateValidator implements CertificateValidator, Serializable {
 
@@ -22,13 +24,13 @@ public class DateCertificateValidator implements CertificateValidator, Serializa
 
   private static final long serialVersionUID = ICryptoConstants.VERSION;
 
-  private Date date;
+  private LocalDateTime date;
 
   public DateCertificateValidator() {
     super();
   }
 
-  public DateCertificateValidator(final Date date) {
+  public DateCertificateValidator(final LocalDateTime date) {
     super();
     this.date = date;
   }
@@ -42,7 +44,7 @@ public class DateCertificateValidator implements CertificateValidator, Serializa
       if (this.date == null) {
         current = new Date();
       } else {
-        current = this.date;
+        current = Dates.toDate(this.date);
       }
 
       x509Certificate.checkValidity(current);

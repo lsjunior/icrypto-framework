@@ -1,7 +1,7 @@
 package com.github.lsjunior.icrypto.api.asn1;
 
 import java.text.ParseException;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1GeneralizedTime;
@@ -16,6 +16,7 @@ import org.bouncycastle.asn1.esf.OtherHashAlgAndValue;
 
 import com.github.lsjunior.icrypto.ICryptoLog;
 import com.github.lsjunior.icrypto.core.util.Asn1Objects;
+import com.github.lsjunior.icrypto.core.util.Dates;
 
 public class PolicyInfo extends ASN1Object {
 
@@ -96,10 +97,10 @@ public class PolicyInfo extends ASN1Object {
       return false;
     }
     try {
-      Date now = new Date();
-      Date notBefore = this.getSigningPeriod().getNotBefore().getDate();
-      Date notAfter = this.getSigningPeriod().getNotAfter().getDate();
-      if ((now.compareTo(notBefore) >= 0) && (now.compareTo(notAfter) <= 0)) {
+      LocalDateTime now = LocalDateTime.now();
+      LocalDateTime notBefore = Dates.toLocalDateTime(this.getSigningPeriod().getNotBefore().getDate());
+      LocalDateTime notAfter = Dates.toLocalDateTime(this.getSigningPeriod().getNotAfter().getDate());
+      if ((now.isAfter(notBefore)) && (now.isBefore(notAfter))) {
         return true;
       }
       return false;

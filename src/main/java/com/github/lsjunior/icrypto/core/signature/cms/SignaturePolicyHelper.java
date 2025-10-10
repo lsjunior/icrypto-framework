@@ -1,8 +1,8 @@
 package com.github.lsjunior.icrypto.core.signature.cms;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +24,7 @@ import com.github.lsjunior.icrypto.api.asn1.SignerRules;
 import com.github.lsjunior.icrypto.api.model.SignatureConstraint;
 import com.github.lsjunior.icrypto.api.type.SignatureType;
 import com.github.lsjunior.icrypto.core.util.Asn1Objects;
+import com.github.lsjunior.icrypto.core.util.Dates;
 
 public abstract class SignaturePolicyHelper {
 
@@ -72,12 +73,12 @@ public abstract class SignaturePolicyHelper {
     return true;
   }
 
-  private static Date getNotAfter(final SignPolicyInfo signPolicyInfo) throws ParseException {
-    return signPolicyInfo.getSignatureValidationPolicy().getSigningPeriod().getNotAfter().getDate();
+  private static LocalDateTime getNotAfter(final SignPolicyInfo signPolicyInfo) throws ParseException {
+    return Dates.toLocalDateTime(signPolicyInfo.getSignatureValidationPolicy().getSigningPeriod().getNotAfter().getDate());
   }
 
-  private static Date getNotBefore(final SignPolicyInfo signPolicyInfo) throws ParseException {
-    return signPolicyInfo.getSignatureValidationPolicy().getSigningPeriod().getNotBefore().getDate();
+  private static LocalDateTime getNotBefore(final SignPolicyInfo signPolicyInfo) throws ParseException {
+    return Dates.toLocalDateTime(signPolicyInfo.getSignatureValidationPolicy().getSigningPeriod().getNotBefore().getDate());
   }
 
   private static String getPolicyId(final SignPolicyInfo signPolicyInfo) {

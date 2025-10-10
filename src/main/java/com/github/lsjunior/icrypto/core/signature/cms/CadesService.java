@@ -9,8 +9,8 @@ import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAKey;
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -87,6 +87,7 @@ import com.github.lsjunior.icrypto.core.ocsp.util.Ocsps;
 import com.github.lsjunior.icrypto.core.signature.cms.profile.BasicProfile;
 import com.github.lsjunior.icrypto.core.util.Asn1Objects;
 import com.github.lsjunior.icrypto.core.util.BcProvider;
+import com.github.lsjunior.icrypto.core.util.Dates;
 import com.google.common.base.Strings;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
@@ -644,18 +645,18 @@ public class CadesService implements Serializable {
   private void validateDate(final CadesSignatureContext context) {
     SignaturePolicy c = context.getPolicy();
     if (c != null) {
-      Date date = context.getDate();
+      LocalDateTime date = context.getDate();
 
       if (date == null) {
-        date = new Date();
+        date = LocalDateTime.now();
       }
 
-      Date notBefore = c.getNotBefore();
-      Date notAfter = c.getNotAfter();
+      LocalDateTime notBefore = c.getNotBefore();
+      LocalDateTime notAfter = c.getNotAfter();
       if ((notBefore == null) || (notAfter == null)) {
         throw new ICryptoException("Invalid signature period");
       }
-      if ((date.before(notBefore)) || (date.after(notAfter))) {
+      if ((date.isBefore(notBefore)) || (date.isAfter(notAfter))) {
         throw new ICryptoException("Invalid signature period");
       }
 
@@ -663,10 +664,10 @@ public class CadesService implements Serializable {
       Certificate certificate = chain.get(0);
       X509Certificate x509Certificate = (X509Certificate) certificate;
 
-      notBefore = x509Certificate.getNotBefore();
-      notAfter = x509Certificate.getNotAfter();
+      notBefore = Dates.toLocalDateTime(x509Certificate.getNotBefore());
+      notAfter = Dates.toLocalDateTime(x509Certificate.getNotAfter());
 
-      if ((date.before(notBefore)) || (date.after(notAfter))) {
+      if ((date.isBefore(notBefore)) || (date.isAfter(notAfter))) {
         throw new ICryptoException("Invalid signature period");
       }
     }

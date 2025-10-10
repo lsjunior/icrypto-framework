@@ -2,7 +2,7 @@ package com.github.lsjunior.icrypto.api.model;
 
 import java.io.Serializable;
 import java.security.cert.Certificate;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +20,7 @@ public class Signature implements Serializable {
 
   private String contentHints;
 
-  private Date signingTime;
+  private LocalDateTime signingTime;
 
   private String commitmentType;
 
@@ -85,11 +85,11 @@ public class Signature implements Serializable {
     this.contentHints = contentHints;
   }
 
-  public Date getSigningTime() {
+  public LocalDateTime getSigningTime() {
     return this.signingTime;
   }
 
-  public void setSigningTime(final Date signingTime) {
+  public void setSigningTime(final LocalDateTime signingTime) {
     this.signingTime = signingTime;
   }
 

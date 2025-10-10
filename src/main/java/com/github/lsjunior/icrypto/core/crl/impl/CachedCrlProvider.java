@@ -17,7 +17,7 @@ import com.google.common.base.Joiner;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 
-public class CachedCrlProvider extends SimpleCrlProvider {
+public class CachedCrlProvider extends DefaultCrlProvider {
 
   private static final long serialVersionUID = ICryptoConstants.VERSION;
 

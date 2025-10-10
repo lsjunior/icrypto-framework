@@ -24,6 +24,8 @@ public abstract class IcpBrasilPolicies {
 
   public static final String CADES_POLICY_OID_RB_V2_3 = IcpBrasilPolicies.CADES_POLICY_OID_RB_PREFIX + ".2.3";
 
+  public static final String CADES_POLICY_OID_RB_V2_4 = IcpBrasilPolicies.CADES_POLICY_OID_RB_PREFIX + ".2.4";
+
   // RT
   public static final String CADES_POLICY_OID_RT_CODE = "AD-RT";
 
@@ -43,6 +45,8 @@ public abstract class IcpBrasilPolicies {
 
   public static final String CADES_POLICY_OID_RT_V2_3 = IcpBrasilPolicies.CADES_POLICY_OID_RT_PREFIX + ".2.3";
 
+  public static final String CADES_POLICY_OID_RT_V2_4 = IcpBrasilPolicies.CADES_POLICY_OID_RT_PREFIX + ".2.4";
+
   // RV
   public static final String CADES_POLICY_OID_RV_CODE = "AD-RV";
 
@@ -50,17 +54,19 @@ public abstract class IcpBrasilPolicies {
 
   public static final String CADES_POLICY_OID_RV_PREFIX = IcpBrasilPolicies.ITI_POLICY_PREFIX + ".3";
 
-  public static final String CADES_POLICY_OID_RV_V1 = IcpBrasilPolicies.CADES_POLICY_OID_RT_PREFIX + ".1";
+  public static final String CADES_POLICY_OID_RV_V1 = IcpBrasilPolicies.CADES_POLICY_OID_RV_PREFIX + ".1";
 
-  public static final String CADES_POLICY_OID_RV_V1_1 = IcpBrasilPolicies.CADES_POLICY_OID_RT_PREFIX + ".1.1";
+  public static final String CADES_POLICY_OID_RV_V1_1 = IcpBrasilPolicies.CADES_POLICY_OID_RV_PREFIX + ".1.1";
 
-  public static final String CADES_POLICY_OID_RV_V2 = IcpBrasilPolicies.CADES_POLICY_OID_RT_PREFIX + ".2";
+  public static final String CADES_POLICY_OID_RV_V2 = IcpBrasilPolicies.CADES_POLICY_OID_RV_PREFIX + ".2";
 
-  public static final String CADES_POLICY_OID_RV_V2_1 = IcpBrasilPolicies.CADES_POLICY_OID_RT_PREFIX + ".2.1";
+  public static final String CADES_POLICY_OID_RV_V2_1 = IcpBrasilPolicies.CADES_POLICY_OID_RV_PREFIX + ".2.1";
 
-  public static final String CADES_POLICY_OID_RV_V2_2 = IcpBrasilPolicies.CADES_POLICY_OID_RT_PREFIX + ".2.2";
+  public static final String CADES_POLICY_OID_RV_V2_2 = IcpBrasilPolicies.CADES_POLICY_OID_RV_PREFIX + ".2.2";
 
-  public static final String CADES_POLICY_OID_RV_V2_3 = IcpBrasilPolicies.CADES_POLICY_OID_RT_PREFIX + ".2.3";
+  public static final String CADES_POLICY_OID_RV_V2_3 = IcpBrasilPolicies.CADES_POLICY_OID_RV_PREFIX + ".2.3";
+
+  public static final String CADES_POLICY_OID_RV_V2_4 = IcpBrasilPolicies.CADES_POLICY_OID_RV_PREFIX + ".2.4";
 
   // RC
   public static final String CADES_POLICY_OID_RC_CODE = "AD-RC";
@@ -80,6 +86,8 @@ public abstract class IcpBrasilPolicies {
   public static final String CADES_POLICY_OID_RC_V2_2 = IcpBrasilPolicies.CADES_POLICY_OID_RC_PREFIX + ".2.2";
 
   public static final String CADES_POLICY_OID_RC_V2_3 = IcpBrasilPolicies.CADES_POLICY_OID_RC_PREFIX + ".2.3";
+
+  public static final String CADES_POLICY_OID_RC_V2_4 = IcpBrasilPolicies.CADES_POLICY_OID_RC_PREFIX + ".2.4";
 
   // RA
   public static final String CADES_POLICY_OID_RA_CODE = "AD-RA";
@@ -104,6 +112,8 @@ public abstract class IcpBrasilPolicies {
 
   public static final String CADES_POLICY_OID_RA_V2_4 = IcpBrasilPolicies.CADES_POLICY_OID_RA_PREFIX + ".2.4";
 
+  public static final String CADES_POLICY_OID_RA_V2_5 = IcpBrasilPolicies.CADES_POLICY_OID_RA_PREFIX + ".2.5";
+
   // Regex
   public static final String CADES_POLICY_OID_V1_PATTERN = (IcpBrasilPolicies.ITI_POLICY_PREFIX + ".[1-5].1$").replaceAll("\\.", "\\\\.");
 
@@ -121,6 +131,8 @@ public abstract class IcpBrasilPolicies {
 
   public static final String CADES_POLICY_OID_V24_PATTERN = (IcpBrasilPolicies.ITI_POLICY_PREFIX + ".[1-5].2.4$").replaceAll("\\.", "\\\\.");
 
+  public static final String CADES_POLICY_OID_V25_PATTERN = (IcpBrasilPolicies.ITI_POLICY_PREFIX + ".[1-5].2.5$").replaceAll("\\.", "\\\\.");
+
   // PAdES
   // RB
   public static final String PADES_POLICY_OID_RB_CODE = "AD-RB";
@@ -133,6 +145,10 @@ public abstract class IcpBrasilPolicies {
 
   public static final String PADES_POLICY_OID_RB_V1_1 = IcpBrasilPolicies.PADES_POLICY_OID_RB_PREFIX + ".1.1";
 
+  public static final String PADES_POLICY_OID_RB_V1_2 = IcpBrasilPolicies.PADES_POLICY_OID_RB_PREFIX + ".1.2";
+
+  public static final String PADES_POLICY_OID_RB_V1_3 = IcpBrasilPolicies.PADES_POLICY_OID_RB_PREFIX + ".1.3";
+
   // RT
   public static final String PADES_POLICY_OID_RT_CODE = "AD-RT";
 
@@ -141,6 +157,10 @@ public abstract class IcpBrasilPolicies {
   public static final String PADES_POLICY_OID_RT_PREFIX = IcpBrasilPolicies.ITI_POLICY_PREFIX + ".12";
 
   public static final String PADES_POLICY_OID_RT_V1 = IcpBrasilPolicies.PADES_POLICY_OID_RT_PREFIX + ".1";
+
+  public static final String PADES_POLICY_OID_RT_V2 = IcpBrasilPolicies.PADES_POLICY_OID_RT_PREFIX + ".2";
+
+  public static final String PADES_POLICY_OID_RT_V3 = IcpBrasilPolicies.PADES_POLICY_OID_RT_PREFIX + ".3";
 
   // RC
   public static final String PADES_POLICY_OID_RC_CODE = "AD-RC";
@@ -155,6 +175,10 @@ public abstract class IcpBrasilPolicies {
 
   public static final String PADES_POLICY_OID_RC_V1_2 = IcpBrasilPolicies.PADES_POLICY_OID_RC_PREFIX + ".1.2";
 
+  public static final String PADES_POLICY_OID_RC_V1_3 = IcpBrasilPolicies.PADES_POLICY_OID_RC_PREFIX + ".1.3";
+
+  public static final String PADES_POLICY_OID_RC_V1_4 = IcpBrasilPolicies.PADES_POLICY_OID_RC_PREFIX + ".1.4";
+
   // RA
   public static final String PADES_POLICY_OID_RA_CODE = "AD-RA";
 
@@ -167,6 +191,10 @@ public abstract class IcpBrasilPolicies {
   public static final String PADES_POLICY_OID_RA_V1_1 = IcpBrasilPolicies.PADES_POLICY_OID_RA_PREFIX + ".1.1";
 
   public static final String PADES_POLICY_OID_RA_V1_2 = IcpBrasilPolicies.PADES_POLICY_OID_RA_PREFIX + ".1.2";
+
+  public static final String PADES_POLICY_OID_RA_V1_3 = IcpBrasilPolicies.PADES_POLICY_OID_RA_PREFIX + ".1.3";
+
+  public static final String PADES_POLICY_OID_RA_V1_4 = IcpBrasilPolicies.PADES_POLICY_OID_RA_PREFIX + ".1.4";
 
   // EXT
   public static final String PADES_EXT_PREFIX = "2.16.76.1.8";
@@ -181,6 +209,13 @@ public abstract class IcpBrasilPolicies {
   public static final String PADES_POLICY_OID_V1_PATTERN = (IcpBrasilPolicies.ITI_POLICY_PREFIX + ".1[1-4].1$").replaceAll("\\.", "\\\\.");
 
   public static final String PADES_POLICY_OID_V11_PATTERN = (IcpBrasilPolicies.ITI_POLICY_PREFIX + ".1[1-4].1.1$").replaceAll("\\.", "\\\\.");
+
+  public static final String PADES_POLICY_OID_V12_PATTERN = (IcpBrasilPolicies.ITI_POLICY_PREFIX + ".1[1-4].1.2$").replaceAll("\\.", "\\\\.");
+
+  public static final String PADES_POLICY_OID_V13_PATTERN = (IcpBrasilPolicies.ITI_POLICY_PREFIX + ".1[1-4].1.3$").replaceAll("\\.", "\\\\.");
+
+  public static final String PADES_POLICY_OID_V14_PATTERN = (IcpBrasilPolicies.ITI_POLICY_PREFIX + ".1[1-4].1.4$").replaceAll("\\.", "\\\\.");
+
 
   private IcpBrasilPolicies() {
     //

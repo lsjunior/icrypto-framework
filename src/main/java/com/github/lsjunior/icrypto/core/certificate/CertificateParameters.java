@@ -3,8 +3,8 @@ package com.github.lsjunior.icrypto.core.certificate;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.KeyPair;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,9 +37,9 @@ public class CertificateParameters implements Serializable {
 
   private BigInteger serialNumber;
 
-  private Date notBefore;
+  private LocalDateTime notBefore;
 
-  private Date notAfter;
+  private LocalDateTime notAfter;
 
   private String comment;
 
@@ -130,19 +130,19 @@ public class CertificateParameters implements Serializable {
     this.serialNumber = serialNumber;
   }
 
-  public Date getNotBefore() {
+  public LocalDateTime getNotBefore() {
     return this.notBefore;
   }
 
-  public void setNotBefore(final Date notBefore) {
+  public void setNotBefore(final LocalDateTime notBefore) {
     this.notBefore = notBefore;
   }
 
-  public Date getNotAfter() {
+  public LocalDateTime getNotAfter() {
     return this.notAfter;
   }
 
-  public void setNotAfter(final Date notAfter) {
+  public void setNotAfter(final LocalDateTime notAfter) {
     this.notAfter = notAfter;
   }
 

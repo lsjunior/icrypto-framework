@@ -141,7 +141,7 @@ public abstract class Asn1Objects {
   }
 
   public static String toString(final ASN1TaggedObject tag, final Charset charset) {
-    ASN1Primitive obj = tag.toASN1Primitive();
+    ASN1Object obj = tag.getBaseObject();
     return Asn1Objects.toString(obj, charset);
   }
 
@@ -157,6 +157,9 @@ public abstract class Asn1Objects {
     }
     if (obj instanceof ASN1OctetString) {
       return new String(((ASN1OctetString) obj).getOctets(), charset);
+    }
+    if (obj instanceof ASN1TaggedObject) {
+      return Asn1Objects.toString(((ASN1TaggedObject) obj).getBaseObject(), charset);
     }
     ICryptoLog.getLogger().warn("Unknow value (" + obj.getClass() + ") " + obj);
     return null;

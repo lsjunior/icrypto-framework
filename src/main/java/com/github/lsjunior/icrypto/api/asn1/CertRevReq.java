@@ -20,7 +20,7 @@ public class CertRevReq extends ASN1Object {
     if (sequence.size() > 1) {
       ASN1TaggedObject taggedObject = (ASN1TaggedObject) sequence.getObjectAt(1);
       int tagNo = taggedObject.getTagNo();
-      Object obj = taggedObject.toASN1Primitive();
+      Object obj = taggedObject.getBaseObject();
       switch (tagNo) {
         case 0:
           this.caCerts = RevReq.getInstance(obj);

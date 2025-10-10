@@ -63,12 +63,13 @@ public abstract class PdfBoxServiceHelper {
       return false;
     }
 
-    PDDocument doc = Loader.loadPDF(data.read());
-    List<PDSignature> pdSignatureList = doc.getSignatureDictionaries();
-    if ((pdSignatureList != null) && (!pdSignatureList.isEmpty())) {
-      return true;
+    try (PDDocument doc = Loader.loadPDF(data.read())) {
+      List<PDSignature> pdSignatureList = doc.getSignatureDictionaries();
+      if ((pdSignatureList != null) && (!pdSignatureList.isEmpty())) {
+        return true;
+      }
+      return false;
     }
-    return false;
   }
 
   public static PDSignature getLastSignature(final PDDocument pdDocument) {
@@ -86,44 +87,6 @@ public abstract class PdfBoxServiceHelper {
       return pdSignature;
     }
     return null;
-  }
-
-  @SuppressWarnings("deprecation")
-  public static boolean isLastSignatureMatching(final ByteSource original, final ByteSource signed) throws IOException {
-    PDDocument pdDocument = Loader.loadPDF(signed.read());
-    PDSignature pdSignature = PdfBoxServiceHelper.getLastSignature(pdDocument);
-    COSDictionary dict = pdSignature.getCOSObject();
-    COSDictionary digestDictionary = dict.getCOSDictionary(COSName.getPDFName("Digest"));
-    if (digestDictionary != null) {
-
-      String sha512 = digestDictionary.getString(COSName.DIGEST_SHA512);
-      if (sha512 != null) {
-        String originalHash = original.hash(Hashing.sha512()).toString().toLowerCase();
-        if (sha512.equalsIgnoreCase(originalHash)) {
-          return true;
-        }
-        return false;
-      }
-
-      String sha256 = digestDictionary.getString(COSName.DIGEST_SHA256);
-      if (sha256 != null) {
-        String originalHash = original.hash(Hashing.sha256()).toString().toLowerCase();
-        if (sha256.equalsIgnoreCase(originalHash)) {
-          return true;
-        }
-        return false;
-      }
-
-      String sha1 = digestDictionary.getString(COSName.DIGEST_SHA1);
-      if (sha1 != null) {
-        String originalHash = original.hash(Hashing.sha1()).toString().toLowerCase();
-        if (sha1.equalsIgnoreCase(originalHash)) {
-          return true;
-        }
-        return false;
-      }
-    }
-    return false;
   }
 
   public static int getMDPPermission(final PDDocument document) {

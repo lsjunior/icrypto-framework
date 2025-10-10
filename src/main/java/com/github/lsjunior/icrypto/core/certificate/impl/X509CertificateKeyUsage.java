@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -97,6 +98,22 @@ public class X509CertificateKeyUsage implements Serializable {
     return this.keyUsage[index];
   }
 
+  public List<String> getKeyUsageAsStringList() {
+    if (this.keyUsage == null) {
+      return Collections.emptyList();
+    }
+    List<String> list = new ArrayList<>();
+    for (int i = 0; i < this.keyUsage.length; i++) {
+      if (this.keyUsage[i]) {
+        KeyUsageType keyUsageType = KeyUsageType.get(i);
+        if (keyUsageType != null) {
+          list.add(keyUsageType.toString());
+        }
+      }
+    }
+    return list;
+  }
+
   // Extended Key Usage
   public boolean isExtendedKeyUsageAny() {
     return this.getExtendedKeyUsage(ExtendedKeyUsageType.ANY.getKeyPurposeId());
@@ -139,6 +156,20 @@ public class X509CertificateKeyUsage implements Serializable {
       return true;
     }
     return false;
+  }
+
+  public List<String> getExtendedKeyUsageAsStringList() {
+    if (this.extendedKeyUsage == null) {
+      return Collections.emptyList();
+    }
+    List<String> list = new ArrayList<>();
+    for (String str : this.extendedKeyUsage) {
+        ExtendedKeyUsageType extendedKeyUsageType = ExtendedKeyUsageType.get(str);
+        if (extendedKeyUsageType != null) {
+          list.add(extendedKeyUsageType.toString());
+        }
+    }
+    return list;
   }
 
   // Instance

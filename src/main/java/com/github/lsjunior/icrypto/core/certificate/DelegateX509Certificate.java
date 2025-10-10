@@ -1,25 +1,14 @@
 package com.github.lsjunior.icrypto.core.certificate;
 
+import javax.security.auth.x500.X500Principal;
 import java.math.BigInteger;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.Principal;
-import java.security.PublicKey;
-import java.security.SignatureException;
+import java.security.*;
+import java.security.cert.*;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
-import java.security.cert.CertificateParsingException;
-import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-
-import javax.security.auth.x500.X500Principal;
 
 public class DelegateX509Certificate extends X509Certificate {
 
@@ -118,7 +107,7 @@ public class DelegateX509Certificate extends X509Certificate {
 
   @Override
   public Principal getIssuerDN() {
-    return this.certificate.getIssuerDN();
+    return this.certificate.getIssuerX500Principal();
   }
 
   @Override
@@ -128,7 +117,7 @@ public class DelegateX509Certificate extends X509Certificate {
 
   @Override
   public Principal getSubjectDN() {
-    return this.certificate.getSubjectDN();
+    return this.certificate.getSubjectX500Principal();
   }
 
   @Override

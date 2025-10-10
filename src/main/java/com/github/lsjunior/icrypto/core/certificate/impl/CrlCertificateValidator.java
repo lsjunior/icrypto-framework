@@ -13,7 +13,7 @@ import com.github.lsjunior.icrypto.ICryptoException;
 import com.github.lsjunior.icrypto.core.certificate.CertificateValidator;
 import com.github.lsjunior.icrypto.core.certificate.ValidationError;
 import com.github.lsjunior.icrypto.core.crl.CrlProvider;
-import com.github.lsjunior.icrypto.core.crl.impl.SimpleCrlProvider;
+import com.github.lsjunior.icrypto.core.crl.impl.DefaultCrlProvider;
 import com.github.lsjunior.icrypto.core.crl.util.Crls;
 
 public class CrlCertificateValidator implements CertificateValidator, Serializable {
@@ -25,7 +25,7 @@ public class CrlCertificateValidator implements CertificateValidator, Serializab
   private final CrlProvider crlProvider;
 
   public CrlCertificateValidator() {
-    this(new SimpleCrlProvider());
+    this(new DefaultCrlProvider());
   }
 
   public CrlCertificateValidator(final CrlProvider crlProvider) {

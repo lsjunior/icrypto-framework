@@ -1,7 +1,7 @@
 package com.github.lsjunior.icrypto.ext.icpbrasil.certificate;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.github.lsjunior.icrypto.ICryptoConstants;
 import com.github.lsjunior.icrypto.ICryptoException;
@@ -11,7 +11,7 @@ public class DadoPessoa implements Serializable {
 
   private static final long serialVersionUID = ICryptoConstants.VERSION;
 
-  private Date dataNascimento;
+  private LocalDate dataNascimento;
 
   private String cpf;
 
@@ -25,7 +25,7 @@ public class DadoPessoa implements Serializable {
     super();
   }
 
-  public DadoPessoa(final Date dataNascimento, final String cpf, final String pis, final String rg, final String emissorRg) {
+  public DadoPessoa(final LocalDate dataNascimento, final String cpf, final String pis, final String rg, final String emissorRg) {
     super();
     this.dataNascimento = dataNascimento;
     this.cpf = cpf;
@@ -34,11 +34,11 @@ public class DadoPessoa implements Serializable {
     this.emissorRg = emissorRg;
   }
 
-  public Date getDataNascimento() {
+  public LocalDate getDataNascimento() {
     return this.dataNascimento;
   }
 
-  public void setDataNascimento(final Date dataNascimento) {
+  public void setDataNascimento(final LocalDate dataNascimento) {
     this.dataNascimento = dataNascimento;
   }
 
@@ -92,7 +92,6 @@ public class DadoPessoa implements Serializable {
   }
 
   // Static
-
   public static DadoPessoa getInstance(final String otherNameString) {
     try {
       if (Strings.isNullOrEmpty(otherNameString)) {
@@ -100,13 +99,13 @@ public class DadoPessoa implements Serializable {
       }
 
       String dataStr = otherNameString.substring(0, 8); // Data Nascimento
-      Date data = null;
+      LocalDate dataNascimento = null;
       String cpf = otherNameString.substring(8, 19); // CPF
       String pis = IcpBrasilHelper.getValueFromNumeric(otherNameString.substring(20, 30)); // PIS
       String rg = IcpBrasilHelper.getValueFromNumeric(otherNameString.substring(30, 45)); // Rg
       String emissorRg = otherNameString.substring(45).trim(); // Emissor Rg
       if ((!Strings.isNullOrEmpty(dataStr)) && (!Strings.isNullOrEmpty(dataStr.replaceAll("0", "")))) {
-        data = IcpBrasilHelper.getDateFromString(dataStr);
+        dataNascimento = IcpBrasilHelper.getDateFromString(dataStr);
       }
 
       if (Strings.isNullOrEmpty(cpf)) {
@@ -119,7 +118,7 @@ public class DadoPessoa implements Serializable {
         rg = null;
       }
 
-      return new DadoPessoa(data, cpf, pis, rg, emissorRg);
+      return new DadoPessoa(dataNascimento, cpf, pis, rg, emissorRg);
     } catch (Exception e) {
       throw new ICryptoException(e);
     }

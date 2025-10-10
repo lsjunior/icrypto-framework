@@ -32,7 +32,7 @@ import com.github.lsjunior.icrypto.core.certificate.CertificateValidator;
 import com.github.lsjunior.icrypto.core.certificate.ValidationError;
 import com.github.lsjunior.icrypto.core.certificate.util.Certificates;
 import com.github.lsjunior.icrypto.core.crl.CrlProvider;
-import com.github.lsjunior.icrypto.core.crl.impl.SimpleCrlProvider;
+import com.github.lsjunior.icrypto.core.crl.impl.DefaultCrlProvider;
 import com.github.lsjunior.icrypto.core.crl.util.Crls;
 import com.google.common.base.Strings;
 
@@ -166,7 +166,7 @@ public class PkixCertificateValidator implements CertificateValidator, Serializa
       Security.setProperty(PkixCertificateValidator.OSCP_ENABLE_PROPERTY, PkixCertificateValidator.OSCP_ENABLE_VALUE);
       CrlProvider crlProvider = this.crlProvider;
       if (crlProvider == null) {
-        crlProvider = new SimpleCrlProvider();
+        crlProvider = new DefaultCrlProvider();
       }
 
       CRL crl = Crls.toCrl(crlProvider.getCrl(certificate));

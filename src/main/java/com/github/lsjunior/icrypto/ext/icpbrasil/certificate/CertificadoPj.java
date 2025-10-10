@@ -1,7 +1,7 @@
 package com.github.lsjunior.icrypto.ext.icpbrasil.certificate;
 
 import java.security.cert.X509Certificate;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class CertificadoPj extends CertificadoIcp {
 
@@ -51,7 +51,7 @@ public class CertificadoPj extends CertificadoIcp {
   }
 
   // Delegate
-  public Date getDataNascimentoResponsavel() {
+  public LocalDate getDataNascimentoResponsavel() {
     if (this.getDadoPessoa() == null) {
       return null;
     }

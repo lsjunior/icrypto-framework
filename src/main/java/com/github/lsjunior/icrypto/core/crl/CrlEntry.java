@@ -2,7 +2,7 @@ package com.github.lsjunior.icrypto.core.crl;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import com.github.lsjunior.icrypto.ICryptoConstants;
 import com.github.lsjunior.icrypto.api.type.RevokeReasonType;
@@ -15,13 +15,13 @@ public class CrlEntry implements Serializable {
 
   private final RevokeReasonType reason;
 
-  private final Date date;
+  private final LocalDateTime date;
 
   public CrlEntry(final BigInteger serialNumber, final RevokeReasonType reason) {
-    this(serialNumber, reason, new Date());
+    this(serialNumber, reason, LocalDateTime.now());
   }
 
-  public CrlEntry(final BigInteger serialNumber, final RevokeReasonType reason, final Date date) {
+  public CrlEntry(final BigInteger serialNumber, final RevokeReasonType reason, final LocalDateTime date) {
     super();
     this.serialNumber = serialNumber;
     this.reason = reason;
@@ -36,7 +36,7 @@ public class CrlEntry implements Serializable {
     return this.reason;
   }
 
-  public Date getDate() {
+  public LocalDateTime getDate() {
     return this.date;
   }
 

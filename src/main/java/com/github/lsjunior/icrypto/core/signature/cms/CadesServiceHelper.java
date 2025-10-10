@@ -17,10 +17,10 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -130,17 +130,18 @@ import com.github.lsjunior.icrypto.core.certificate.CertPathProvider;
 import com.github.lsjunior.icrypto.core.certificate.util.CertPaths;
 import com.github.lsjunior.icrypto.core.certificate.util.Certificates;
 import com.github.lsjunior.icrypto.core.crl.CrlProvider;
-import com.github.lsjunior.icrypto.core.crl.impl.SimpleCrlProvider;
+import com.github.lsjunior.icrypto.core.crl.impl.DefaultCrlProvider;
 import com.github.lsjunior.icrypto.core.crl.util.Crls;
 import com.github.lsjunior.icrypto.core.digest.Digester;
 import com.github.lsjunior.icrypto.core.digest.util.Digesters;
 import com.github.lsjunior.icrypto.core.ocsp.OcspProvider;
-import com.github.lsjunior.icrypto.core.ocsp.impl.SimpleOcspProvider;
+import com.github.lsjunior.icrypto.core.ocsp.impl.DefaultOcspProvider;
 import com.github.lsjunior.icrypto.core.signature.cms.profile.BasicProfile;
 import com.github.lsjunior.icrypto.core.timestamp.TimeStampProvider;
 import com.github.lsjunior.icrypto.core.timestamp.util.TimeStamps;
 import com.github.lsjunior.icrypto.core.util.Asn1Objects;
 import com.github.lsjunior.icrypto.core.util.BcProvider;
+import com.github.lsjunior.icrypto.core.util.Dates;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Iterables;
 import com.google.common.hash.Hashing;
@@ -420,7 +421,7 @@ public abstract class CadesServiceHelper {
     TimeStamp contentTimeStamp = parameters.getContentTimeStamp();
     String contentType = parameters.getContentType();
     ByteSource data = parameters.getData();
-    Date date = parameters.getDate();
+    LocalDateTime date = parameters.getDate();
     boolean dataDigested = parameters.isDataDigested();
     boolean detached = parameters.isDetached();
     boolean validateCertificate = parameters.isValidateCertificate();
@@ -441,10 +442,10 @@ public abstract class CadesServiceHelper {
     TimeStampProvider timeStampClient = parameters.getTimeStampProvider();
 
     if (crlProvider == null) {
-      crlProvider = new SimpleCrlProvider();
+      crlProvider = new DefaultCrlProvider();
     }
     if (ocspProvider == null) {
-      ocspProvider = new SimpleOcspProvider();
+      ocspProvider = new DefaultOcspProvider();
     }
     if (signatureProfile == null) {
       signatureProfile = new BasicProfile();
@@ -486,13 +487,13 @@ public abstract class CadesServiceHelper {
     if (parameters.getSignedAttributes() != null) {
       context.setSignedAttributes(parameters.getSignedAttributes());
     } else {
-      context.setSignedAttributes(new HashMap<String, byte[]>());
+      context.setSignedAttributes(new HashMap<>());
     }
 
     if (parameters.getUnsignedAttributes() != null) {
       context.setUnsignedAttributes(parameters.getUnsignedAttributes());
     } else {
-      context.setUnsignedAttributes(new HashMap<String, byte[]>());
+      context.setUnsignedAttributes(new HashMap<>());
     }
 
     if (parameters.getIdentity() != null) {
@@ -593,7 +594,7 @@ public abstract class CadesServiceHelper {
         TimeStamp archiveTimeStamp = CadesServiceHelper.getArchiveTimeStamp(unsignedAttributeTable);
         signature.setArchiveTimeStamp(archiveTimeStamp);
 
-        Date signingTime = CadesServiceHelper.getSigningTime(signedAttributeTable);
+        LocalDateTime signingTime = CadesServiceHelper.getSigningTime(signedAttributeTable);
         signature.setSigningTime(signingTime);
 
         SignaturePolicy signaturePolicy = CadesServiceHelper.getSignaturePolicy(signaturePolicyProvider, signedAttributeTable);
@@ -849,12 +850,12 @@ public abstract class CadesServiceHelper {
     return null;
   }
 
-  public static Date getSigningTime(final AttributeTable attributeTable) throws ParseException {
+  public static LocalDateTime getSigningTime(final AttributeTable attributeTable) throws ParseException {
     ASN1Set signTimeSet = CadesServiceHelper.getAttributeValue(PKCSObjectIdentifiers.pkcs_9_at_signingTime, attributeTable);
     if (signTimeSet != null) {
       ASN1Encodable encodable = signTimeSet.getObjectAt(0);
       ASN1UTCTime time = ASN1UTCTime.getInstance(encodable);
-      return time.getAdjustedDate();
+      return Dates.toLocalDateTime(time.getAdjustedDate());
     }
     return null;
   }

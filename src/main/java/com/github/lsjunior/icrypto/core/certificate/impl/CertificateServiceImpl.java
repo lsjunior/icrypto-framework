@@ -26,6 +26,7 @@ import com.github.lsjunior.icrypto.core.certificate.CertificateExtension;
 import com.github.lsjunior.icrypto.core.certificate.CertificateParameters;
 import com.github.lsjunior.icrypto.core.certificate.CertificateService;
 import com.github.lsjunior.icrypto.core.certificate.util.Certificates;
+import com.github.lsjunior.icrypto.core.util.Dates;
 
 public class CertificateServiceImpl extends AbstractCertificateManager implements CertificateService {
 
@@ -66,8 +67,8 @@ public class CertificateServiceImpl extends AbstractCertificateManager implement
     chain.add(null);
 
     if ((request.getIssuerPrivateKey() != null) && (request.getIssuerCertificate() != null)) {
-      builder = new JcaX509v3CertificateBuilder(request.getIssuerCertificate(), request.getSerialNumber(), request.getNotBefore(), request.getNotAfter(),
-          request.getSubjectAsX500Principal(), request.getPublicKey());
+      builder =
+          new JcaX509v3CertificateBuilder(request.getIssuerCertificate(), request.getSerialNumber(), Dates.toDate(request.getNotBefore()), Dates.toDate(request.getNotAfter()), request.getSubjectAsX500Principal(), request.getPublicKey());
 
       AuthorityKeyIdentifier authorityKeyIdentifier = new JcaX509ExtensionUtils().createAuthorityKeyIdentifier(request.getIssuerCertificate().getPublicKey());
       builder.addExtension(Extension.authorityKeyIdentifier, false, authorityKeyIdentifier);
@@ -83,8 +84,7 @@ public class CertificateServiceImpl extends AbstractCertificateManager implement
 
       chain.addAll(issuerChain);
     } else {
-      builder = new JcaX509v3CertificateBuilder(request.getSubjectAsX500Name(), request.getSerialNumber(), request.getNotBefore(), request.getNotAfter(),
-          request.getSubjectAsX500Name(), request.getPublicKey());
+      builder = new JcaX509v3CertificateBuilder(request.getSubjectAsX500Name(), request.getSerialNumber(), Dates.toDate(request.getNotBefore()), Dates.toDate(request.getNotAfter()), request.getSubjectAsX500Name(), request.getPublicKey());
 
       if (request.isCa()) {
         AuthorityKeyIdentifier authorityKeyIdentifier = new JcaX509ExtensionUtils().createAuthorityKeyIdentifier(request.getPublicKey());

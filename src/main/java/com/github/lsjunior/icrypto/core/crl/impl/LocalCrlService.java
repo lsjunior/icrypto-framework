@@ -23,6 +23,7 @@ import com.github.lsjunior.icrypto.core.crl.CrlEntry;
 import com.github.lsjunior.icrypto.core.crl.CrlParameters;
 import com.github.lsjunior.icrypto.core.crl.CrlService;
 import com.github.lsjunior.icrypto.core.util.BcProvider;
+import com.github.lsjunior.icrypto.core.util.Dates;
 
 public class LocalCrlService implements CrlService {
 
@@ -40,13 +41,13 @@ public class LocalCrlService implements CrlService {
   public byte[] generate(final CrlParameters parameters) {
     try {
       X509Certificate certificate = (X509Certificate) this.issuer.getChain().get(0);
-      Date thisUpdate = parameters.getThisUpdate();
+      LocalDateTime thisUpdate = parameters.getThisUpdate();
       if (thisUpdate == null) {
-        thisUpdate = new Date();
+        thisUpdate = LocalDateTime.now();
       }
-      X509v2CRLBuilder builder = new X509v2CRLBuilder(Certificates.toX500Name(certificate.getSubjectX500Principal()), thisUpdate);
+      X509v2CRLBuilder builder = new X509v2CRLBuilder(Certificates.toX500Name(certificate.getSubjectX500Principal()), Dates.toDate(thisUpdate));
       if (parameters.getNextUpdate() != null) {
-        builder.setNextUpdate(parameters.getNextUpdate());
+        builder.setNextUpdate(Dates.toDate(parameters.getNextUpdate()));
       } else {
         LocalDateTime localDateTime = LocalDateTime.now().plusHours(12);
         Date nextUpdate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
@@ -69,7 +70,7 @@ public class LocalCrlService implements CrlService {
       ContentSigner contentSigner = contentSignerBuilder.build(privateKey);
 
       for (CrlEntry entry : parameters.getEntries()) {
-        builder.addCRLEntry(entry.getSerialNumber(), entry.getDate(), entry.getReason().getCode());
+        builder.addCRLEntry(entry.getSerialNumber(), Dates.toDate(entry.getDate()), entry.getReason().getCode());
       }
 
       X509CRLHolder crl = builder.build(contentSigner);

@@ -67,6 +67,7 @@ import com.github.lsjunior.icrypto.core.signature.cms.CadesService;
 import com.github.lsjunior.icrypto.core.signature.cms.CadesVerificationParameters;
 import com.github.lsjunior.icrypto.core.signature.cms.CadesVerificationResult;
 import com.github.lsjunior.icrypto.core.util.BcProvider;
+import com.github.lsjunior.icrypto.core.util.Dates;
 import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteSource;
@@ -450,7 +451,7 @@ public class PdfBoxService extends AbstractPadesService implements Serializable 
       if (signDate != null) {
         for (com.github.lsjunior.icrypto.api.model.Signature s : padesResult.getDocument().getSignatures()) {
           if (s.getSigningTime() == null) {
-            s.setSigningTime(signDate.getTime());
+            s.setSigningTime(Dates.toLocalDateTime(signDate.getTime()));
           }
         }
       }
@@ -508,7 +509,7 @@ public class PdfBoxService extends AbstractPadesService implements Serializable 
     com.github.lsjunior.icrypto.api.model.Signature signatureModel = new com.github.lsjunior.icrypto.api.model.Signature();
     signatureModel.setChain(certificates);
     signatureModel.setSignatureType(SignatureType.SHA1_RSA);
-    signatureModel.setSigningTime(pdSignature.getSignDate().getTime());
+    signatureModel.setSigningTime(Dates.toLocalDateTime(pdSignature.getSignDate().getTime()));
     signatureModel.setMessageDigest(Hashing.sha1().hashBytes(signedContent).toString().toUpperCase());
     // signatureModel.setMessageDigest(BaseEncoding.base16().encode(signedContent));
     signatureModel.setErrors(new ArrayList<>());

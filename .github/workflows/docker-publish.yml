@@ -9,6 +9,7 @@ on:
     #tags:
     #  - v**
 jobs:
+  # https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-java-packages-with-maven#publishing-packages-to-the-maven-central-repository
   publish:
     runs-on: ubuntu-latest
     permissions:

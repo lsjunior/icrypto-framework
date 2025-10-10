@@ -1,19 +1,15 @@
 package com.github.lsjunior.icrypto.core.crl.impl;
 
-import java.io.Serializable;
 import java.security.cert.Certificate;
 import java.security.cert.X509CRL;
 
-import com.github.lsjunior.icrypto.ICryptoConstants;
 import com.github.lsjunior.icrypto.ICryptoException;
 import com.github.lsjunior.icrypto.core.crl.CrlProvider;
 import com.github.lsjunior.icrypto.core.crl.util.Crls;
 
-public class SimpleCrlProvider implements CrlProvider, Serializable {
+public class DefaultCrlProvider implements CrlProvider {
 
-  private static final long serialVersionUID = ICryptoConstants.VERSION;
-
-  public SimpleCrlProvider() {
+  public DefaultCrlProvider() {
     super();
   }
 

@@ -1,20 +1,16 @@
 package com.github.lsjunior.icrypto.core.ocsp.impl;
 
-import java.io.Serializable;
 import java.security.cert.Certificate;
 
 import org.bouncycastle.cert.ocsp.OCSPResp;
 
-import com.github.lsjunior.icrypto.ICryptoConstants;
 import com.github.lsjunior.icrypto.ICryptoException;
 import com.github.lsjunior.icrypto.core.ocsp.OcspProvider;
 import com.github.lsjunior.icrypto.core.ocsp.util.Ocsps;
 
-public class SimpleOcspProvider implements OcspProvider, Serializable {
+public class DefaultOcspProvider implements OcspProvider {
 
-  private static final long serialVersionUID = ICryptoConstants.VERSION;
-
-  public SimpleOcspProvider() {
+  public DefaultOcspProvider() {
     super();
   }
 

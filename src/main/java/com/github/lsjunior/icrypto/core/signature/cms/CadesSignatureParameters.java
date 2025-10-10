@@ -2,7 +2,7 @@ package com.github.lsjunior.icrypto.core.signature.cms;
 
 import java.io.Serializable;
 import java.security.cert.Certificate;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import com.github.lsjunior.icrypto.ICryptoConstants;
@@ -48,7 +48,7 @@ public class CadesSignatureParameters implements Serializable {
 
   private boolean ignoreSigningTime;
 
-  private Date date;
+  private LocalDateTime date;
 
   private String digestProvider;
 
@@ -182,11 +182,11 @@ public class CadesSignatureParameters implements Serializable {
     this.ignoreSigningTime = ignoreSigningTime;
   }
 
-  public Date getDate() {
+  public LocalDateTime getDate() {
     return this.date;
   }
 
-  public void setDate(final Date date) {
+  public void setDate(final LocalDateTime date) {
     this.date = date;
   }
 

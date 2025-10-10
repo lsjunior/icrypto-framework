@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import org.bouncycastle.cert.X509CertificateHolder;
@@ -24,6 +24,7 @@ import com.github.lsjunior.icrypto.core.signature.cms.CadesErrors;
 import com.github.lsjunior.icrypto.core.signature.cms.CadesSignatureContext;
 import com.github.lsjunior.icrypto.core.signature.cms.SignatureProfile;
 import com.github.lsjunior.icrypto.core.signature.cms.VerificationContext;
+import com.github.lsjunior.icrypto.core.util.Dates;
 import com.google.common.base.Strings;
 
 public class BasicProfile implements SignatureProfile, Serializable {
@@ -78,11 +79,11 @@ public class BasicProfile implements SignatureProfile, Serializable {
       signature.getErrors().add(new ErrorMessage(CadesErrors.CERTIFICATE_NOT_FOUND, "Certificate not found", true));
     } else {
       X509Certificate certificate = (X509Certificate) signature.getChain().get(0);
-      Date signingTime = signature.getSigningTime();
-      Date notBefore = certificate.getNotBefore();
-      Date notAfter = certificate.getNotAfter();
+      LocalDateTime signingTime = signature.getSigningTime();
+      LocalDateTime notBefore = Dates.toLocalDateTime(certificate.getNotBefore());
+      LocalDateTime notAfter = Dates.toLocalDateTime(certificate.getNotAfter());
       if (signingTime != null) {
-        if ((notBefore.after(signingTime)) || (notAfter.before(signingTime))) {
+        if ((notBefore.isAfter(signingTime)) || (notAfter.isBefore(signingTime))) {
           signature.getErrors().add(new ErrorMessage(CadesErrors.SIGNING_TIME_INVALID, "Invalid signing time", true));
         }
       } else {

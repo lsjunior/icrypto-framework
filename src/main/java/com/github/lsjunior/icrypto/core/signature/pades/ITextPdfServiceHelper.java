@@ -4,7 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -54,18 +56,12 @@ public abstract class ITextPdfServiceHelper {
       return false;
     }
 
-    PdfReader reader = null;
-    try {
-      reader = new PdfReader(data.openStream());
+    try (PdfReader reader = new PdfReader(data.openStream())) {
       reader.close();
       return true;
     } catch (Exception e) {
       ICryptoLog.getLogger().debug(e.getMessage());
       return false;
-    } finally {
-      if (reader != null) {
-        reader.close();
-      }
     }
   }
 
@@ -116,40 +112,23 @@ public abstract class ITextPdfServiceHelper {
     return null;
   }
 
-  @SuppressWarnings("deprecation")
-  public static boolean isLastSignatureMatching(final ByteSource original, final ByteSource signed) throws IOException {
-    try (PdfReader pdfReader = new PdfReader(signed.openStream())) {
-      PdfDictionary pdfDictionary = ITextPdfServiceHelper.getLastSignature(pdfReader);
-      PdfDictionary digestDictionary = pdfDictionary.getAsDict(new PdfName("Digest"));
-      if (digestDictionary != null) {
-        PdfString sha512 = digestDictionary.getAsString(new PdfName("SHA512"));
-        if (sha512 != null) {
-          String originalHash = original.hash(Hashing.sha512()).toString().toLowerCase();
-          if (sha512.toUnicodeString().equalsIgnoreCase(originalHash)) {
-            return true;
-          }
+  public static boolean isContentMatching(final ByteSource original, final ByteSource signed) throws IOException {
+    try (InputStream inputStreamOriginal = original.openStream(); InputStream inputStreamSigned = signed.openStream()) {
+      try (PdfReader readerOriginal = new PdfReader(inputStreamOriginal); PdfReader readerSigned = new PdfReader(inputStreamSigned)) {
+        int pageCountOriginal = readerOriginal.getNumberOfPages();
+        int pageCountSigned = readerSigned.getNumberOfPages();
+        if (pageCountOriginal != pageCountSigned) {
           return false;
         }
-
-        PdfString sha256 = digestDictionary.getAsString(new PdfName("SHA256"));
-        if (sha256 != null) {
-          String originalHash = original.hash(Hashing.sha256()).toString().toLowerCase();
-          if (sha256.toUnicodeString().equalsIgnoreCase(originalHash)) {
-            return true;
+        for (int i = 1; i <= pageCountOriginal; i++) {
+          byte[] pageContentOriginal = readerOriginal.getPageContent(i);
+          byte[] pageContentSigned = readerSigned.getPageContent(i);
+          if (!Arrays.equals(pageContentOriginal, pageContentSigned)) {
+            return false;
           }
-          return false;
         }
-
-        PdfString sha1 = digestDictionary.getAsString(new PdfName("SHA1"));
-        if (sha1 != null) {
-          String originalHash = original.hash(Hashing.sha1()).toString().toLowerCase();
-          if (sha1.toUnicodeString().equalsIgnoreCase(originalHash)) {
-            return true;
-          }
-          return false;
-        }
+        return true;
       }
-      return false;
     }
   }
 
