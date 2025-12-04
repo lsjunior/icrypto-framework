@@ -1,6 +1,6 @@
 package com.github.lsjunior.icrypto.core.signature.pades;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,6 +24,23 @@ import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.util.Store;
+import org.openpdf.text.DocumentException;
+import org.openpdf.text.Image;
+import org.openpdf.text.Rectangle;
+import org.openpdf.text.html.simpleparser.HTMLWorker;
+import org.openpdf.text.html.simpleparser.StyleSheet;
+import org.openpdf.text.pdf.ColumnText;
+import org.openpdf.text.pdf.PdfArray;
+import org.openpdf.text.pdf.PdfDictionary;
+import org.openpdf.text.pdf.PdfName;
+import org.openpdf.text.pdf.PdfNumber;
+import org.openpdf.text.pdf.PdfObject;
+import org.openpdf.text.pdf.PdfReader;
+import org.openpdf.text.pdf.PdfSignatureAppearance;
+import org.openpdf.text.pdf.PdfStamper;
+import org.openpdf.text.pdf.PdfString;
+import org.openpdf.text.pdf.PdfTemplate;
+import org.openpdf.text.pdf.PdfWriter;
 import org.xml.sax.SAXException;
 
 import com.github.lsjunior.icrypto.ICryptoConstants;
@@ -36,23 +53,6 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Image;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.html.simpleparser.HTMLWorker;
-import com.lowagie.text.html.simpleparser.StyleSheet;
-import com.lowagie.text.pdf.ColumnText;
-import com.lowagie.text.pdf.PdfArray;
-import com.lowagie.text.pdf.PdfDictionary;
-import com.lowagie.text.pdf.PdfName;
-import com.lowagie.text.pdf.PdfNumber;
-import com.lowagie.text.pdf.PdfObject;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfSignatureAppearance;
-import com.lowagie.text.pdf.PdfStamper;
-import com.lowagie.text.pdf.PdfString;
-import com.lowagie.text.pdf.PdfTemplate;
-import com.lowagie.text.pdf.PdfWriter;
 
 public class ITextPdfService extends AbstractPadesService implements Serializable {
 
@@ -86,12 +86,12 @@ public class ITextPdfService extends AbstractPadesService implements Serializabl
     PdfReader reader = new PdfReader(inputFile.getAbsolutePath());
     PdfStamper stp = null;
     try {
-      stp = PdfStamper.createSignature(reader, outputStream, '\0', null, true);
+      stp = PdfStamper.createSignature(reader, outputStream, "\u0000", null, true);
     } catch (DocumentException e) {
       ICryptoLog.getLogger().info(e.getMessage(), e);
       reader.close();
       reader = new PdfReader(inputFile.getAbsolutePath());
-      stp = PdfStamper.createSignature(reader, outputStream, '\0', null, false);
+      stp = PdfStamper.createSignature(reader, outputStream, "\u0000", null, false);
     }
     stp.setIncludeFileID(true);
     stp.setEnforcedModificationDate(calendar);
@@ -176,7 +176,7 @@ public class ITextPdfService extends AbstractPadesService implements Serializabl
 
     try (PdfReader reader = new PdfReader(file.getAbsolutePath()); OutputStream outputStream = new FileOutputStream(outputFile)) {
       PdfDictionary catalog = reader.getCatalog();
-      PdfStamper stamper = new PdfStamper(reader, outputStream, '\0', true);
+      PdfStamper stamper = new PdfStamper(reader, outputStream, "\u0000", true);
       PdfWriter writer = stamper.getWriter();
 
       PdfDictionary dss = new PdfDictionary();

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <prerequisites>
+    <maven>3.6.3</maven>
+  </prerequisites>
+
   <groupId>com.github.lsjunior</groupId>
   <artifactId>icrypto-framework</artifactId>
   <version>0.0.2-SNAPSHOT</version>
@@ -13,12 +17,12 @@
     <!-- No Test -->
     <test>false</test>
     <!-- Libs -->
-    <bouncycastle.version>1.80</bouncycastle.version>
-    <guava.version>33.4.8-jre</guava.version>
+    <bouncycastle.version>1.83</bouncycastle.version>
+    <guava.version>33.5.0-jre</guava.version>
     <java.version>17</java.version>
-    <junit.version>5.12.2</junit.version>
-    <openpdf.version>2.2.0</openpdf.version>
-    <pdfbox.version>3.0.5</pdfbox.version>
+    <junit.version>5.14.1</junit.version>
+    <openpdf.version>3.0.0</openpdf.version>
+    <pdfbox.version>3.0.6</pdfbox.version>
     <slf4j.version>1.7.36</slf4j.version>
     <!-- Plugins -->
     <plugin.clean.version>3.5.0</plugin.clean.version>
@@ -37,8 +41,7 @@
   <scm>
     <url>https://github.com/lsjunior/icrypto-framework</url>
     <connection>scm:git:https://github.com/lsjunior/icrypto-framework.git</connection>
-    <developerConnection>
-      scm:git:https://github.com/lsjunior/icrypto-framework.git</developerConnection>
+    <developerConnection>scm:git:https://github.com/lsjunior/icrypto-framework.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
