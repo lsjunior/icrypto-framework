@@ -1,6 +1,8 @@
 package com.github.lsjunior.icrypto.core.signature.pades;
 
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
+import java.util.function.Function;
 
 import com.github.lsjunior.icrypto.ICryptoConstants;
 import com.google.common.io.ByteSource;
@@ -24,6 +26,8 @@ public class VisibleSignatureParameters implements Serializable {
   private int zoom;
 
   private String template;
+
+  private Function<PadesSignatureParameters, BufferedImage> imageProvider;
 
   public VisibleSignatureParameters() {
     super();
@@ -99,4 +103,11 @@ public class VisibleSignatureParameters implements Serializable {
     this.template = template;
   }
 
+  public Function<PadesSignatureParameters, BufferedImage> getImageProvider() {
+    return this.imageProvider;
+  }
+
+  public void setImageProvider(final Function<PadesSignatureParameters, BufferedImage> imageProvider) {
+    this.imageProvider = imageProvider;
+  }
 }

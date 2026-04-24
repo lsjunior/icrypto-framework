@@ -165,7 +165,7 @@ public class PdfBoxService extends AbstractPadesService implements Serializable 
       // outputStreamTmp.close();
       // outputStreamTmp = new FileOutputStream(fileTmp);
 
-      document.addSignature(signature, signatureInterface, signatureOptions);
+      document.addSignature(signature, signatureInterface::sign, signatureOptions);
       document.setDocumentId(Long.valueOf(System.currentTimeMillis()));
 
       ExternalSigningSupport externalSigning = document.saveIncrementalForExternalSigning(outputStreamTmp);
@@ -186,7 +186,7 @@ public class PdfBoxService extends AbstractPadesService implements Serializable 
        * if (fileTmp.exists()) { fileTmp.delete(); }
        */
     } else {
-      document.addSignature(signature, signatureInterface, signatureOptions);
+      document.addSignature(signature, signatureInterface::sign, signatureOptions);
       FileOutputStream outputStream = new FileOutputStream(outputFile);
       document.saveIncremental(outputStream);
       outputStream.close();
