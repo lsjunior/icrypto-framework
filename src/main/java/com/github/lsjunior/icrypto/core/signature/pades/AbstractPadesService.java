@@ -26,6 +26,10 @@ public abstract class AbstractPadesService implements PadesService {
   }
 
   protected BufferedImage getSignatureImage(final PadesSignatureParameters parameters) throws IOException {
+    if (parameters.getVisibleSignature().getImageProvider() != null) {
+      return parameters.getVisibleSignature().getImageProvider().apply(parameters);
+    }
+
     VisibleSignatureParameters visibleSignature = parameters.getVisibleSignature();
     Identity identity = parameters.getIdentity();
     X509Certificate certificate = (X509Certificate) identity.getChain().get(0);
@@ -60,7 +64,7 @@ public abstract class AbstractPadesService implements PadesService {
     g.setComposite(AlphaComposite.Src);
 
     // FIXME Delegar!!!
-    g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, fontSize + 2));
+    g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, fontSize + 4));
     g.drawString("Documento assinado digitalmente", left, top += lineHeight);
     g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, fontSize));
     g.drawString("Certificado: " + subject, left, top += lineHeight);
