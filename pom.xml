@@ -46,7 +46,7 @@
   </scm>
 
   <distributionManagement>
-    <repository>
+    <!--<repository>
       <id>github</id>
       <name>GitHub LSJUNIOR Apache Maven Packages</name>
       <url>https://maven.pkg.github.com/lsjunior/icrypto-framework</url>
@@ -55,6 +55,16 @@
       <id>github</id>
       <name>GitHub LSJUNIOR Apache Maven Packages</name>
       <url>https://maven.pkg.github.com/lsjunior/icrypto-framework</url>
+    </snapshotRepository>-->
+    <repository>
+      <id>lidersis</id>
+      <name>Lidersis Releases</name>
+      <url>https://maven.lidersis.com.br/repository/maven-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>lidersis</id>
+      <name>Lidersis Snapshots</name>
+      <url>https://maven.lidersis.com.br/repository/maven-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 
